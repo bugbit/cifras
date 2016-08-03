@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 /*
 	CIFRAS [tipo de generador de los numeros]
 		Tipo de generador de numeros:
@@ -11,6 +8,16 @@
 	CIFRAS [num1] [num2] [num3] [num4] [num5] [num6] [objetivo]
 
 */
+
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#ifdef __BORLANDC__
+	#define	FASTCALL	_fastcall
+#else
+	#define	FASTCALL
+#endif
 
 
 enum ERandom { Ninguno=-1, TV2=0, CanalSur,R100 };
@@ -73,7 +80,7 @@ int readargs(int argc,char **argv)
 }
 
 
-int _cdecl main(int argc,char **argv)
+int main(int argc,char **argv)
 {
 	if (readargs(argc,argv))
 		return EXIT_FAILURE;
