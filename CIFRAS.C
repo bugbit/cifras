@@ -46,25 +46,58 @@ void mostrarinstrucciones()
 	);
 }
 
+int ajusteidxgrupo(int idx)
+{
+	return ((idx % 7)!=0) ? idx: idx+1;
+}
+
+void mezclargr2(int *result,int n)
+{
+	int t=6*n;
+	int i;
+	int r;
+
+	for (i=t;i>=0;i--)
+	{
+		r=random(t);
+	}
+}
+
 void mezclargr(int *result)
 {
-	int i,j,k,idx1,idx2,tmp;
+	int i,j,k,idx1,idx2,tmp,t=100+random(200);
+	int *rptr=result;
+	int *m=mgrupos;
 
-	memcpy(result,mgrupos,4*6*sizeof(int));
-	//memcpy(result,mgrupos,4*6*sizeof(int));
-	for (i=0;i<100;i++)
+	for (i=0;i<4;i++,rptr += 6,m += 6)
 	{
-		idx1=random(3*6);
-		idx2=random(3*6);
+		*rptr++=6;
+		memcpy(rptr,m,4*6*sizeof(int));
+	}
+	//memcpy(result,mgrupos,4*6*sizeof(int));
+	for (i=0;i<t;i++)
+	{
+		idx1=random(3)*7+random(6)+1;
+		idx2=random(3)*7+random(6)+1;
 		tmp=result[idx1];
 		result[idx1]=result[idx2];
 		result[idx2]=tmp;
-		idx1=3*6+random(6);
-		idx2=3*6+random(6);
+		idx1=3*7+random(6)+1;
+		idx2=3*7+random(6)+1;
 		tmp=result[idx1];
 		result[idx1]=result[idx2];
 		result[idx2]=tmp;
 	}
+}
+
+int obtnumero(int *result,int grupo)
+{
+	int *rptr=result+7*(grupo-1);
+	int num=rptr[*rptr];
+
+	--*rptr;
+
+	return num;
 }
 
 int randomgrupo(int n123,int num)
@@ -79,7 +112,7 @@ int randomgrupo(int n123,int num)
 
 void generar_random_tv(int num,char **grupos)
 {
-	int result[4][6];
+	int result[4][7];
 	int i;
 	int grupo;
 
@@ -92,7 +125,8 @@ void generar_random_tv(int num,char **grupos)
 			scanf("%d",&grupo);
 		else
 			printf("%d\n",grupo);
-		mNumeros[i]=result[grupo-1][random(6)];
+		mNumeros[i]=obtnumero(result,grupo);
+
 		printf("N£mero: %d\n",mNumeros[i]);
 	}
 	mObjetivo=100+random(900);
@@ -110,7 +144,7 @@ void generar_random_canalsur()
 	for (i=0;i<6;i++)
 	{
 		grupo=randomgrupo(n123,i+1);
-		mNumeros[i]=result[grupo-1][random(6)];
+		mNumeros[i]=obtnumero(result,grupo);
 		printf("%d ",mNumeros[i]);
 		if (grupo<4)
 			n123++;
