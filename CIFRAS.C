@@ -51,15 +51,22 @@ int ajusteidxgrupo(int idx)
 	return ((idx % 7)!=0) ? idx: idx+1;
 }
 
+/*
+	Aplicamos el algoritmo para mezcla de Fisher-Yates
+	n = El numero de grupos que queremos juntar
+*/
 void mezclargr2(int *result,int n)
 {
-	int t=6*n;
-	int i;
-	int r;
+	int t=6*n,i,r,tmp,idx1,idx2;
 
 	for (i=t;i>=0;i--)
 	{
 		r=random(t);
+		idx1=ajusteidxgrupo(i);
+		idx2=ajusteidxgrupo(r);
+		tmp=result[idx1];
+		result[idx1]=result[idx2];
+		result[idx2]=tmp;
 	}
 }
 
@@ -74,6 +81,8 @@ void mezclargr(int *result)
 		*rptr++=6;
 		memcpy(rptr,m,4*6*sizeof(int));
 	}
+	mezclargr2(result,3);
+	mezclargr2(result+7*3,1);
 	//memcpy(result,mgrupos,4*6*sizeof(int));
 	for (i=0;i<t;i++)
 	{
