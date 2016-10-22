@@ -13,13 +13,74 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <errno.h>
 
 #ifdef __BORLANDC__
 	#define	FASTCALL	_fastcall
+	#define randomint(n)(random(n))
+	#define getsarray(s)(gets(s))
 #else
 	#define	FASTCALL
+	#define randomint(n)(random() % n)
+	#define randomize()(srand( time(NULL) ))
+	#define	getsarray(s)(fgets_wrapper(s,sizeof(s)-1,stdin))
+	
+	char *fgets_wrapper(char *buffer, size_t buflen, FILE *fp)
+{
+    if (fgets(buffer, buflen, fp) != 0)
+    {
+        size_t len = strlen(buffer);
+        if (len > 0 && buffer[len-1] == '\n')
+            buffer[len-1] = '\0';
+        return buffer;
+    }
+    return 0;
+}
 #endif
 
+enum EOperaciones
+{
+	Suma=0,multiplicacion,Resta,division
+};
+
+typedef struct
+{
+	union
+	{
+		struct
+		{
+			unsigned num1:10;
+			unsigned num2:10;
+			unsigned operacion:2;
+		} s;
+		long n;	
+	} u;
+} Expr2Bin;
+
+typedef struct
+{
+	unsigned char count;
+	void *expr2bin;
+} Expr2Bins;
+
+typedef struct __Combinaciones__
+{
+	unsigned char numeros[6];
+	union
+	{
+		struct
+		{
+			unsigned count:3;
+			unsigned idx1:3;
+			unsigned idx2:3;
+			unsigned operacion:2;
+		} s;
+		short n;
+	} u;
+	struct __Combinaciones__ *next;
+	Expr2Bins exprs;
+} Combinaciones;
 
 int tv1grupos[4];
 int mNumeros[6];
@@ -31,13 +92,16 @@ int mgrupos[][6]=
 	{ 4,5,6,7,8,9 },
 	{ 10,10,25,50,75,100 }
 };
+int mCalcAprox;
+
+Combinaciones *mCombTop=NULL;
 
 void mostrarinstrucciones()
 {
 	printf
 	(
 		"Instrucciones:\n"
-		"Tipo random o tecleo los 6 n£meros m s objetivo\n"
+		"Tipo random o tecleo los 6 nUmeros mÂ s objetivo\n"
 		"r1\trandom tv2. Puede elegir los 4 grupos\n"
 		"r2\trandom canal sur\n"
 		"r3\tRandom 1-100\n"
@@ -61,7 +125,7 @@ void mezclargr2(int *result,int n)
 
 	for (i=t;i>=0;i--)
 	{
-		r=random(t);
+		r=randomint(t);
 		idx1=ajusteidxgrupo(i);
 		idx2=ajusteidxgrupo(r);
 		tmp=result[idx1];
@@ -72,27 +136,27 @@ void mezclargr2(int *result,int n)
 
 void mezclargr(int *result)
 {
-	int i,j,k,idx1,idx2,tmp,t=100+random(200);
+	int i,idx1,idx2,tmp,t=100+randomint(200);
 	int *rptr=result;
-	int *m=mgrupos;
+	int *m=(int *) &mgrupos;
 
 	for (i=0;i<4;i++,rptr += 6,m += 6)
 	{
 		*rptr++=6;
-		memcpy(rptr,m,4*6*sizeof(int));
+		memcpy(rptr,m,6*sizeof(int));
 	}
 	mezclargr2(result,3);
 	mezclargr2(result+7*3,1);
 	//memcpy(result,mgrupos,4*6*sizeof(int));
 	for (i=0;i<t;i++)
 	{
-		idx1=random(3)*7+random(6)+1;
-		idx2=random(3)*7+random(6)+1;
+		idx1=randomint(3)*7+randomint(6)+1;
+		idx2=randomint(3)*7+randomint(6)+1;
 		tmp=result[idx1];
 		result[idx1]=result[idx2];
 		result[idx2]=tmp;
-		idx1=3*7+random(6)+1;
-		idx2=3*7+random(6)+1;
+		idx1=3*7+randomint(6)+1;
+		idx2=3*7+randomint(6)+1;
 		tmp=result[idx1];
 		result[idx1]=result[idx2];
 		result[idx2]=tmp;
@@ -111,10 +175,10 @@ int obtnumero(int *result,int grupo)
 
 int randomgrupo(int n123,int num)
 {
-	int p=random(100);
+	int p=randomint(100);
 	int p123=(num) ? 100*n123/num : 0;
 	int p100123=(100-p123)/2;
-	int g=(p<=p100123) ? random(3)+1 : 4;
+	int g=(p<=p100123) ? randomint(3)+1 : 4;
 
 	return g;
 }
@@ -125,40 +189,42 @@ void generar_random_tv(int num,char **grupos)
 	int i;
 	int grupo;
 
-	mezclargr(result);
+	mezclargr((int *) &result);
 	for (i=0;i<6;i++)
 	{
 		printf("elija un grupo 1-4: ");
 		grupo=(i<num) ? atoi(grupos[i]) : 0;
 		if (grupo<1 || grupo>4)
-			scanf("%d",&grupo);
+			do
+				scanf("%d",&grupo);
+			while (grupo<1 || grupo>4);
 		else
 			printf("%d\n",grupo);
-		mNumeros[i]=obtnumero(result,grupo);
+		mNumeros[i]=obtnumero((int *) &result,grupo);
 
-		printf("N£mero: %d\n",mNumeros[i]);
+		printf("Numero: %d\n",mNumeros[i]);
 	}
-	mObjetivo=100+random(900);
-	printf("N£mero objetivo: %d\n",mObjetivo);
+	mObjetivo=100+randomint(900);
+	printf("Numero objetivo: %d\n",mObjetivo);
 }
 
 void generar_random_canalsur()
 {
-	int result[4][6];
+	int result[4][7];
 	int i;
 	int n123=0;
 	int grupo;
 
-	mezclargr(result);
+	mezclargr((int *) &result);
 	for (i=0;i<6;i++)
 	{
 		grupo=randomgrupo(n123,i+1);
-		mNumeros[i]=obtnumero(result,grupo);
+		mNumeros[i]=obtnumero((int *) &result,grupo);
 		printf("%d ",mNumeros[i]);
 		if (grupo<4)
 			n123++;
 	}
-	mObjetivo=100+random(900);
+	mObjetivo=100+randomint(900);
 	printf("%d\n",mObjetivo);
 }
 
@@ -168,10 +234,10 @@ void generar_random_1_100()
 
 	for (i=0;i<6;i++)
 	{
-		mNumeros[i]=random(100)+1;
+		mNumeros[i]=randomint(100)+1;
 		printf("%d ",mNumeros[i]);
 	}
-	mObjetivo=100+random(900);
+	mObjetivo=100+randomint(900);
 	printf("%d\n",mObjetivo);
 }
 
@@ -181,7 +247,7 @@ int leerargs(int num,char **argv)
 	char *arg1=*argv;
 	int i;
 
-	if (!strcmpi(arg1,"r1"))
+	if (!strcmp(arg1,"r1"))
 	{
 		if (num==1)
 			generar_random_tv(0,NULL);
@@ -189,44 +255,151 @@ int leerargs(int num,char **argv)
 			generar_random_tv(num-1,argv+1);
 		else
 		{
-			printf("si elijes grupos tienen que ser hasta un m ximo de 6\n");
+			printf("si elijes grupos tienen que ser hasta un mÂ ximo de 6\n");
 			return -1;
 		}
 
 		return 0;
 	}
-	else if (!strcmpi(arg1,"r2"))
+	else if (!strcmp(arg1,"r2"))
 	{
 		generar_random_canalsur();
 
 		return 0;
 	}
-	else if (!strcmpi(arg1,"r3"))
+	else if (!strcmp(arg1,"r3"))
 	{
 		generar_random_1_100();
 
 		return 0;
 	}
-	else if (!strcmpi(arg1,"exit"))
+	else if (!strcmp(arg1,"exit"))
 	{
 		exit(0);
 	}
 	else if (num==7)
 	{
 		for (i=0;i<6;i++)
-			mNumeros[i]=atoi(++argv);
-		mObjetivo=atoi(argv);
+			mNumeros[i]=atoi(*(++argv));
+		mObjetivo=atoi(*argv);
 
 		return 0;
 	}
 
-	printf("Elije una opci¢n\n");
+	printf("Elije una opciÂ¢n\n");
 
 	return -1;
 }
 
+void esaprox()
+{
+	// comparar si el cuadrado del sumatorio de las pistas es menor que el doble del nÃºmero a hallar
+	
+	int s=0;
+	int i=0;
+	
+	for (;i<6;i++)
+		s += mNumeros[i];
+		
+	mCalcAprox= s*s<2*mObjetivo;
+}
+
+void *mallocexprs(size_t size,int num)
+{
+	return malloc(size+num*sizeof(Expr2Bin));
+}
+
+void copythenumeros(Combinaciones *comb)
+{
+	int i,j,tmp;
+	
+	for(i=0;i<6;i++)
+	{
+		comb->numeros[i]=mNumeros[i];
+		for (j=i-1;j>=0;i--)
+		{
+			if (comb->numeros[j]>comb->numeros[j+1])
+			{
+				tmp=comb->numeros[j];
+				comb->numeros[j]=comb->numeros[j+1];
+				comb->numeros[j+1]=tmp;
+			}
+			else
+				break;
+		}
+	}
+}
+
+Combinaciones *firstcomb()
+{
+	Combinaciones *comb=(Combinaciones *) mallocexprs(sizeof(Combinaciones),1);
+	
+	if (comb!=NULL)
+	{
+		copythenumeros(comb);
+		comb->u.s.count=6;
+		comb->u.s.idx1=0;
+		comb->u.s.idx2=1;
+		comb->u.s.operacion=0;
+		comb->exprs.count=0;
+	}
+	
+	return comb;
+}
+
+void pushcomb(Combinaciones *comb)
+{
+	if (mCombTop!=NULL)
+		comb->next=mCombTop;
+	mCombTop=comb;
+}
+
+Combinaciones *popcomb()
+{
+	Combinaciones *comb=mCombTop;
+	
+	if (comb!=NULL)
+		mCombTop=mCombTop->next;
+	
+	return comb;
+}
+
+void resetcombs()
+{
+	Combinaciones *comb;
+	
+	while ((comb=popcomb())!=NULL)
+		free(comb);
+}
+
+//int op(Expr2Bin *expr,int *)
+
+void FASTCALL resolcomb(Combinaciones *comb)
+{
+	Expr2Bin *expr=((Expr2Bin *)&comb->exprs.expr2bin)+comb->exprs.count;
+	
+	comb->exprs.count++;
+	expr->u.s.num1=comb->numeros[comb->u.s.idx1];
+	expr->u.s.num2=comb->numeros[comb->u.s.idx2];
+}
+
 void resolver()
 {
+	Combinaciones *comb,*comb1;
+	
+	if ((comb1=comb=firstcomb())==NULL)
+	{
+		puts(strerror(errno));
+		
+		return;
+	}
+	esaprox();
+	//pushcomb(comb1);
+	do
+		resolcomb(comb);
+	while ((comb=popcomb())!=NULL);
+	resetcombs();
+	free(comb1);
 }
 
 void splitargs(char *linea,int *num,char **args)
@@ -262,8 +435,8 @@ void leerYresolver(int num,char **argv)
 	}
 	while (!sehaleido)
 	{
-		gets(linea);
-		splitargs(linea,&num,&args);
+		getsarray(linea);
+		splitargs(linea,&num,(char **)&args);
 		sehaleido=!leerargs(num,args);
 	}
 	resolver();
@@ -280,6 +453,11 @@ int main(int argc,char **argv)
 	{
 		num=argc-1;
 		args=argv+1;
+	}
+	else
+	{
+		num=0;
+		args=NULL;
 	}
 
 	for(;;)
