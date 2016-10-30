@@ -432,7 +432,7 @@ void FASTCALL initsolucion(Solucion *sol)
 	setexpr2binbottom(&sol->solucion);
 }
 
-bool FASTCALL esaprox(Solucion *sol)
+int FASTCALL esaprox(Solucion *sol)
 {
 	// comparar si el cuadrado del sumatorio de las pistas es menor que el doble del número a hallar
 	
@@ -442,14 +442,20 @@ bool FASTCALL esaprox(Solucion *sol)
 /*
  * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error, -2 si no se puede calcular
  */
-int FASTCALL initsol2op(Solucion *sdest,Solucion *ssource,enum EOperaciones op,int idx1,int idx2)
+int FASTCALL initsol2op(Solucion *sdest,Solucion *ssource,enum EOperaciones op,int idx1,int idx2,int *idx1new,int *idx2new)
 {
 	int i,c,r;
 	
 	sdest->sum=ssource->sum-ssource->numeros[idx1]-ssource->numeros[idx2];
 	for (i=sdest->count=0;i<ssource->count;i++)
-		if (i!=idx1 && i!=idx2)
+		if (i==idx1)
+			*idx1new=sdest->count;
+		else if (i==idx2)
+			*idx2new=sdest->count;
+		else
 			sdest->numeros[sdest->count++]=ssource->numeros[i];
+	if (idx1==idx2 && *idx1new==*idx2new)
+		++*idx2new;
 	sdest->solucion.num1=ssource->numeros[idx1];
 	sdest->solucion.num2=ssource->numeros[idx2];
 	sdest->solucion.operacion=op;
@@ -486,11 +492,15 @@ int FASTCALL resolsol2op(Solucion *_sol,int aproxcalc,enum EOperaciones *op,int 
 {
 	Solucion sol;
 	int j,r;
+	int idx1new,idx2new;
 	
-	if ((r=initsol2op(&sol,_sol,*op,idx1,idx2)))
+	if (_sol->count<=1)
+		return 0;
+		
+	if ((r=initsol2op(&sol,_sol,*op,idx1,idx2,&idx1new,&idx2new)))
 		return (r==-2) ? 0 : r; // si no se puede calcular la solución devuelve 0 sino r
 		
-	return resolsol(&sol,aproxcalc,op,idx1,idx2+1);
+	return resolsol(&sol,aproxcalc,op,idx1new,idx2new);
 }
 
 /*
