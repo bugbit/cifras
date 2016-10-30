@@ -74,6 +74,7 @@ int mObjetivoSol;
 enum EOperaciones 
 	mOpApx[]={ Multiplicacion,Suma,None },
 	mOpExc[]={ Multiplicacion,Suma,Resta,Division,None };
+char mOperacionesChar[]="+*-/";
 	
 int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *op,int idxi,int idxj);
 
@@ -288,7 +289,7 @@ Expr2Bin * FASTCALL getexprfirst(Expr2Bin *expr)
 	if (expr==NULL || isexpr2binbottom(expr) || expr->next==NULL)
 		return NULL;
 		
-	return expr->next->next;
+	return expr;
 }
 
 /*
@@ -296,6 +297,7 @@ Expr2Bin * FASTCALL getexprfirst(Expr2Bin *expr)
 	En las operaciones de resta o division se puede cambiar los operandos si es mayor
 	Si es una resta y el resultado es cero devolvemos -1
 	Si es una división y el resultado no es exacto devolvemos -1
+	Si la operación es multiplicación o división y el segundo operando es 1, también la descarto, puesto que ya hemos probado ese caso.
  */
 int FASTCALL calcexpr(Expr2Bin *expr)
 {
@@ -315,6 +317,9 @@ int FASTCALL calcexpr(Expr2Bin *expr)
 		case Suma:
 			return num1+num2;
 		case Multiplicacion:
+			if (num2==1)
+				return -1;
+					
 			return num1*num2;
 		case Resta:
 			if (num1==num2)
@@ -322,6 +327,9 @@ int FASTCALL calcexpr(Expr2Bin *expr)
 			
 			return expr->num1-expr->num2;
 		case Division:
+			if (num2==1)
+				return -1;
+					
 			d=div(num1,num2);
 			
 			return (d.rem) ? -1 : d.quot;				
@@ -339,8 +347,9 @@ void FASTCALL freeexpr(Expr2Bin *expr)
 	
 	do
 	{
-		e=expr2->next;
-		free(expr2);
+		e=expr2;
+		expr2=expr2->next;
+		free(e);
 	} while (e!=NULL && !isexpr2binbottom(e));
 }
 
@@ -372,15 +381,15 @@ Expr2Bin *FASTCALL cloneexpr(Expr2Bin *expr)
 	} while (expr!=NULL && !isexpr2binbottom(exprn2));
 	e->next=exprnew;
 	
-	return e;
+	return e->next;
 }
 
 /*
- * Devuelve 1 si encontrada solucion, o si no, -1 si hay error
+ * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error
  */
 int FASTCALL esenconsol(Expr2Bin *expr,int c)
 {
-	if (c==mObjetivo || abs(c-mObjetivoSol)>abs(c-mObjetivo))
+	if (c==mObjetivo || abs(c-mObjetivoSol)>=abs(c-mObjetivo))
 	{
 		freeexpr(mSolucion);
 		if ((mSolucion=cloneexpr(expr))==NULL)
@@ -431,7 +440,7 @@ bool FASTCALL esaprox(Solucion *sol)
 }
 
 /*
- * Devuelve 1 si encontrada solucion, o si no, -1 si hay error
+ * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error, -2 si no se puede calcular
  */
 int FASTCALL initsol2op(Solucion *sdest,Solucion *ssource,enum EOperaciones op,int idx1,int idx2)
 {
@@ -458,7 +467,7 @@ int FASTCALL initsol2op(Solucion *sdest,Solucion *ssource,enum EOperaciones op,i
 	c=calcexpr(&sdest->solucion);
 	
 	if (c<0)
-		return -1;
+		return -2;
 		
 	r=esenconsol(&sdest->solucion,c);
 	if (r)
@@ -471,21 +480,21 @@ int FASTCALL initsol2op(Solucion *sdest,Solucion *ssource,enum EOperaciones op,i
 }
 
 /*
- * Devuelve 1 si encontrada solucion, o si no, -1 si hay error
+ * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error
  */
 int FASTCALL resolsol2op(Solucion *_sol,int aproxcalc,enum EOperaciones *op,int idx1,int idx2)
 {
 	Solucion sol;
 	int j,r;
 	
-	if (initsol2op(&sol,_sol,*op,idx1,idx2))
-		return 0;
+	if ((r=initsol2op(&sol,_sol,*op,idx1,idx2)))
+		return (r==-2) ? 0 : r; // si no se puede calcular la solución devuelve 0 sino r
 		
 	return resolsol(&sol,aproxcalc,op,idx1,idx2+1);
 }
 
 /*
- * Devuelve 1 si encontrada solucion, o si no, -1 si hay error
+ * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error
  */
 int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *_op,int idxi,int idxj)
 {
@@ -498,7 +507,7 @@ int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *_op,int idx
 	if (idxj!=0)
 	{
 		for (j=idxj;j<sol->count;j++)
-			if ((r=resolsol2op(sol,aproxcalc,op,i,j)))
+			if ((r=resolsol2op(sol,aproxcalc,op,idxi,j)))
 				return r;
 		idxi++;
 	}
@@ -517,7 +526,7 @@ int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *_op,int idx
 }
 
 /*
- * Devuelve 1 si encontrada solucion, o si no, -1 si hay error
+ * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error
  */
 int FASTCALL resolver()
 {
@@ -529,6 +538,21 @@ int FASTCALL resolver()
 	mObjetivoSol=0;
 	
 	return resolsol(&solucion,esaprox(&solucion),NULL,0,0);
+}
+
+void printsols2(Expr2Bin *sol)
+{
+	if (isexpr2binbottom(sol))
+		return;
+	printsols2(sol->next);
+	printf("%i %c %i = %i\n",sol->num1,mOperacionesChar[sol->operacion],sol->num2,calcexpr(sol));
+}
+
+void printsols(Expr2Bin *sol)
+{
+	Expr2Bin *expr=getexprfirst(sol);
+	
+	printsols2(expr);
 }
 
 void splitargs(char *linea,int *num,char **args)
@@ -553,6 +577,8 @@ void leerYresolver(int num,char **argv)
 	int sehaleido=0;
 	char linea[80];
 	char *args[7];
+	int r;
+	time_t t1,t2;
 
 	mostrarinstrucciones();
 	if (num)
@@ -568,7 +594,15 @@ void leerYresolver(int num,char **argv)
 		splitargs(linea,&num,(char **)&args);
 		sehaleido=!leerargs(num,args);
 	}
-	resolver();
+	time(&t1);
+	r=resolver();
+	time(&t2);
+	if (mObjetivoSol==mObjetivo)
+		printf("He encontrado la solución en %g segs\n",difftime(t2,t1));
+	else
+		printf("No He encontrado la solución sino una aproximación: %i en %g segs\n",mObjetivoSol,difftime(t2,t1));
+	printf("\nLa solución es:\n\n");
+	printsols(mSolucion);
 }
 
 
