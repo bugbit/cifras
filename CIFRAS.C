@@ -22,7 +22,7 @@
 	#define getsarray(s)(gets(s))
 #else
 	#define	FASTCALL
-	#define randomint(n)(random() % n)
+	#define randomint(n)(rand() % n)
 	#define randomize()(srand( time(NULL) ))
 	#define	getsarray(s)(fgets_wrapper(s,sizeof(s)-1,stdin))
 	
