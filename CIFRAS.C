@@ -76,7 +76,7 @@ enum EOperaciones
 	mOpExc[]={ Multiplicacion,Suma,Resta,Division,None };
 char mOperacionesChar[]="+*-/";
 	
-int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *op,int idxi,int idxj);
+int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *op,int idxi);
 
 void mostrarinstrucciones()
 {
@@ -491,7 +491,7 @@ int FASTCALL initsol2op(Solucion *sdest,Solucion *ssource,enum EOperaciones op,i
 int FASTCALL resolsol2op(Solucion *_sol,int aproxcalc,enum EOperaciones *op,int idx1,int idx2)
 {
 	Solucion sol;
-	int j,r;
+	int r;
 	int idx1new,idx2new;
 	
 	if (_sol->count<=1)
@@ -500,13 +500,13 @@ int FASTCALL resolsol2op(Solucion *_sol,int aproxcalc,enum EOperaciones *op,int 
 	if ((r=initsol2op(&sol,_sol,*op,idx1,idx2,&idx1new,&idx2new)))
 		return (r==-2) ? 0 : r; // si no se puede calcular la solución devuelve 0 sino r
 		
-	return resolsol(&sol,aproxcalc,op,idx1new,idx2new);
+	return resolsol(&sol,aproxcalc,NULL,sol.count-1);
 }
 
 /*
  * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error
  */
-int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *_op,int idxi,int idxj)
+int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *_op,int idxi)
 {
 	int isaprox=esaprox(sol),i,j,r;
 	enum EOperaciones *op=(_op!=NULL) ? _op : (isaprox) ? mOpApx : mOpExc;
@@ -514,23 +514,23 @@ int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *_op,int idx
 	if (!aproxcalc && isaprox)
 		return 0;
 	
-	if (idxj!=0)
+	if (idxi!=0)
 	{
-		for (j=idxj;j<sol->count;j++)
-			if ((r=resolsol2op(sol,aproxcalc,op,idxi,j)))
-				return r;
-		idxi++;
-	}
-	for(;*op!=None;op++)
-	{
-		for (i=idxi;i<sol->count;i++)
-		{
-			for (j=i+1;j<sol->count;j++)
-				if ((r=resolsol2op(sol,aproxcalc,op,i,j)))
+		for(;*op!=None;op++)
+			for (j=0;j<idxi;j++)
+				if ((r=resolsol2op(sol,aproxcalc,op,idxi,j)))
 					return r;
-		}
-		idxi=0;
 	}
+	else
+		for(;*op!=None;op++)
+		{
+			for (i=0;i<sol->count;i++)
+			{
+				for (j=i+1;j<sol->count;j++)
+					if ((r=resolsol2op(sol,aproxcalc,op,i,j)))
+						return r;
+			}
+		}
 	
 	return 0;
 }
@@ -547,7 +547,7 @@ int FASTCALL resolver()
 	mSolucion=NULL;
 	mObjetivoSol=0;
 	
-	return resolsol(&solucion,esaprox(&solucion),NULL,0,0);
+	return resolsol(&solucion,esaprox(&solucion),NULL,0);
 }
 
 void printsols2(Expr2Bin *sol)
