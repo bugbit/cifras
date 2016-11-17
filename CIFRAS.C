@@ -262,7 +262,7 @@ int leerargs(int num,char **argv)
 	else if (num==7)
 	{
 		for (i=0;i<6;i++)
-			mNumeros[i]=atoi(*(++argv));
+			mNumeros[i]=atoi(*argv++);
 		mObjetivo=atoi(*argv);
 
 		return 0;
@@ -325,7 +325,7 @@ int FASTCALL calcexpr(Expr2Bin *expr)
 			if (num1==num2)
 				return -1;			
 			
-			return expr->num1-expr->num2;
+			return num1-num2;
 		case Division:
 			if (num2==1)
 				return -1;
@@ -500,7 +500,7 @@ int FASTCALL resolsol2op(Solucion *_sol,int aproxcalc,enum EOperaciones *op,int 
 	if ((r=initsol2op(&sol,_sol,*op,idx1,idx2,&idx1new,&idx2new)))
 		return (r==-2) ? 0 : r; // si no se puede calcular la solución devuelve 0 sino r
 		
-	return resolsol(&sol,aproxcalc,NULL,sol.count-1);
+	return resolsol(&sol,aproxcalc,NULL,0);
 }
 
 /*
