@@ -39,10 +39,34 @@
 }
 #endif
 
+//#define MODO_R
+#define MODO_I
+
+#define	MaxNodos	5
+
+#ifdef MODO_R
+
+#define	obtobjetivosol()		mObjetivoSol
+
+#endif
+
+#ifdef MODO_I
+
+#define	obtobjetivosol()		mNodosSolucion.nodos[mNodosSolucion.count].calculo
+
+enum EResolverNodoEstados
+{
+	SolEncontrada=0,SolNoEncontrada,FinNodo,Error
+};
+
+#endif
+
 enum EOperaciones
 {
 	Suma=0,Multiplicacion,Resta,Division,None
 };
+
+#ifdef MODO_R
 
 typedef struct _Expr2Bin_
 {
@@ -59,6 +83,30 @@ typedef struct
 	Expr2Bin solucion;
 } Solucion;
 
+#endif
+
+#ifdef MODO_I
+
+typedef struct _Nodo
+{
+	int numeros[6];
+	int count;
+	int sum;
+	int aproxcalc;
+	enum EOperaciones *operaciones;
+	int i,j;
+	enum EOperaciones operacion;
+	int calculo;
+} Nodo;
+
+typedef struct _Nodos
+{
+	int count;
+	Nodo nodos[MaxNodos];
+} Nodos;
+
+#endif
+
 int tv1grupos[4];
 int mNumeros[6];
 int mObjetivo;
@@ -69,14 +117,30 @@ int mgrupos[][6]=
 	{ 4,5,6,7,8,9 },
 	{ 10,10,25,50,75,100 }
 };
-Expr2Bin *mSolucion;
-int mObjetivoSol;
 enum EOperaciones 
 	mOpApx[]={ Multiplicacion,Suma,None },
 	mOpExc[]={ Multiplicacion,Suma,Resta,Division,None };
+
+#ifdef MODO_R
+
+Expr2Bin *mSolucion;
+int mObjetivoSol;
+	
+#endif
+
+#ifdef MODO_I
+
+Nodos mNodos,mNodosSolucion;
+
+#endif
+	 
 char mOperacionesChar[]="+*-/";
+
+#ifdef MODO_R
 	
 int FASTCALL resolsol(Solucion *sol,int aproxcalc,enum EOperaciones *op,int idxi);
+
+#endif
 
 void mostrarinstrucciones()
 {
@@ -272,6 +336,8 @@ int leerargs(int num,char **argv)
 
 	return -1;
 }
+
+#ifdef MODO_R
 
 int FASTCALL isexpr2binbottom(Expr2Bin *expr)
 {
@@ -558,12 +624,145 @@ void printsols2(Expr2Bin *sol)
 	printf("%i %c %i = %i\n",sol->num1,mOperacionesChar[sol->operacion],sol->num2,calcexpr(sol));
 }
 
-void printsols(Expr2Bin *sol)
+void printsols3(Expr2Bin *sol)
 {
 	Expr2Bin *expr=getexprfirst(sol);
 	
 	printsols2(expr);
 }
+
+void printsols()
+{
+	printsols3(mSolucion);
+}
+
+#endif
+
+#ifdef MODO_I
+
+Nodo *FASTCALL obtnodoactptr(Nodos *n)
+{
+	return (&n->nodos[n->count]);
+}
+
+int FASTCALL obtnumeronodo(int n,Nodos *ns)
+{	
+	return ((n>0) ? n : ns->nodos[-n].calculo);
+}
+
+void FASTCALL anyadirnumerosanodo(Nodos *nodos, Nodo *nodo,int count,int *numeros)
+{
+	int i,j,tmp,sum;
+	
+	for(i=0,sum=nodo->sum;i<count;i++)
+	{
+		sum += numeros[nodo->count++];
+		nodo->numeros[i]=numeros[i];
+		for (j=i-1;j>=0;j--)
+		{
+			if (obtnumeronodo(nodo->numeros[j],nodos)<obtnumeronodo(nodo->numeros[j+1],nodos))
+			{
+				tmp=nodo->numeros[j];
+				nodo->numeros[j]=nodo->numeros[j+1];
+				nodo->numeros[j+1]=tmp;
+			}
+			else
+				break;
+		}
+	}
+	nodo->sum=sum;
+}
+
+void FASTCALL copynumerosanodo(Nodos *nodos, Nodo *nodo,int count,int *numeros)
+{
+	nodo->count=nodo->sum=0;
+	anyadirnumerosanodo(nodos,nodo,count,numeros);
+}
+
+void FASTCALL initnodos(Nodos *nodos)
+{
+	nodos->count=0;
+	memset(nodos->nodos,0,sizeof(nodos->nodos));
+	nodos->nodos[0].operacion=None;
+}
+
+int FASTCALL esaprox(Nodo *nodo)
+{
+	// comparar si el cuadrado del sumatorio de las pistas es menor que el doble del número a hallar
+	
+	return nodo->sum*nodo->sum<2*mObjetivo;
+}
+
+/*
+ * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
+ */
+EResolverNodoEstados FASTCALL resolver_nodo(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
+{
+	if (nodo->operacion==None)
+	{
+		nodo->aproxcalc=esaprox(nodo);
+		nodo->operaciones=(nodo->aproxcalc) ? mOpApx : mOpExc;
+		nodo->operacion=*nodo->operaciones;
+		nodo->i=0;
+		nodo->j=1;
+	}
+	else if ( nodoant!=NULL && !nodoant->aproxcalc && nodo->aproxcalc)
+		return FinNodo;
+		
+	return SolNoEncontrada;
+}
+
+/*
+ * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
+ */
+int FASTCALL resolver_nodoact()
+{
+	Nodo *nodoact=obtnodoactptr(&mNodos);
+	EResolverNodoEstados r=resolver_nodo(&mNodos,nodoact,(!mNodos.count) ? NULL : &mNodos.nodos[mNodos.count-1]);
+	
+	switch (r)
+	{
+		case FinNodo:
+			if (mNodos.count!=0)
+			{
+				mNodos.count--;
+				
+				return 0;			
+			}
+		case SolEncontrada:
+			return 1;
+		case SolNoEncontrada:
+			return 0;
+		case Error:
+		default:
+			return -1;
+	}
+	
+	return r;
+}
+
+/*
+ * Devuelve 1 si encontrada solucion, 0 si no, -1 si hay error
+ */
+int FASTCALL resolver()
+{
+	Nodo *nodoact;
+	int r;
+	
+	initnodos(&mNodos);
+	initnodos(&mNodosSolucion);
+	nodoact=obtnodoactptr(&mNodos);
+	copynumerosanodo(&mNodos,nodoact,6,(int*) &mNumeros);
+	while(!(r=resolver_nodoact()));
+	
+	return r;
+}
+
+void printsols()
+{
+}
+
+#endif
 
 void splitargs(char *linea,int *num,char **args)
 {
@@ -589,6 +788,7 @@ void leerYresolver(int num,char **argv)
 	char *args[7];
 	int r;
 	time_t t1,t2;
+	int objetivosol;
 
 	mostrarinstrucciones();
 	if (num)
@@ -607,12 +807,13 @@ void leerYresolver(int num,char **argv)
 	time(&t1);
 	r=resolver();
 	time(&t2);
-	if (mObjetivoSol==mObjetivo)
+	objetivosol=obtobjetivosol();
+	if (objetivosol==mObjetivo)
 		printf("He encontrado la solución en %g segs\n",difftime(t2,t1));
 	else
-		printf("No He encontrado la solución sino una aproximación: %i en %g segs\n",mObjetivoSol,difftime(t2,t1));
+		printf("No He encontrado la solución sino una aproximación: %i en %g segs\n",objetivosol,difftime(t2,t1));
 	printf("\nLa solución es:\n\n");
-	printsols(mSolucion);
+	printsols();
 }
 
 
