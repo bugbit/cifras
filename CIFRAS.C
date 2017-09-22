@@ -87,6 +87,8 @@ typedef struct
 
 #ifdef MODO_I
 
+struct _Nodos;
+
 typedef struct _Nodo
 {
 	int numeros[6];
@@ -97,6 +99,7 @@ typedef struct _Nodo
 	int i,j;
 	enum EOperaciones operacion;
 	int calculo;
+    EResolverNodoEstados FASTCALL (*resolver_nodo)(struct _Nodos *nodos,struct _Nodo *nodo,struct _Nodo *nodoant);
 } Nodo;
 
 typedef struct _Nodos
@@ -647,7 +650,7 @@ Nodo *FASTCALL obtnodoactptr(Nodos *n)
 
 int FASTCALL obtnumeronodo(int n,Nodos *ns)
 {	
-	return ((n>0) ? n : ns->nodos[-n].calculo);
+	return ((n>0) ? n : ns->nodos[-n+1].calculo);
 }
 
 void FASTCALL anyadirnumerosanodo(Nodos *nodos, Nodo *nodo,int count,int *numeros)
@@ -679,11 +682,30 @@ void FASTCALL copynumerosanodo(Nodos *nodos, Nodo *nodo,int count,int *numeros)
 	anyadirnumerosanodo(nodos,nodo,count,numeros);
 }
 
+void FASTCALL copyopnodonuevo(Nodos *nodos)
+{
+    int numeros[6];
+    Nodo *nact=obtnodoactptr(nodos),*nnew;
+    
+    nodos->count++;
+    nnew=obtnodoactptr(nodos);
+    memcpy(numeros,nact->numeros,sizeof(numeros));    
+    numeros[nact->i]=-nodos->count;
+    numeros[nact->j]=0;
+    copynumerosanodo(nodos,nnew,nact->count,numeros);
+    nnew->count--;
+}
+
+EResolverNodoEstados FASTCALL resolver_nodo_init(Nodos *nodos,Nodo *nodo,Nodo *nodoant);
+EResolverNodoEstados FASTCALL resolver_nodo_firsti(Nodos *nodos,Nodo *nodo,Nodo *nodoant);
+EResolverNodoEstados FASTCALL resolver_nodo_nexti(Nodos *nodos,Nodo *nodo,Nodo *nodoant);
+EResolverNodoEstados FASTCALL resolver_nodo_ij(Nodos *nodos,Nodo *nodo,Nodo *nodoant);
+
 void FASTCALL initnodos(Nodos *nodos)
 {
 	nodos->count=0;
 	memset(nodos->nodos,0,sizeof(nodos->nodos));
-	nodos->nodos[0].operacion=None;
+	nodos->nodos[0].resolver_nodo=resolver_nodo_init;
 }
 
 int FASTCALL esaprox(Nodo *nodo)
@@ -696,20 +718,112 @@ int FASTCALL esaprox(Nodo *nodo)
 /*
  * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
  */
-EResolverNodoEstados FASTCALL resolver_nodo(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
+EResolverNodoEstados FASTCALL resolver_nodo_init(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
 {
-	if (nodo->operacion==None)
-	{
-		nodo->aproxcalc=esaprox(nodo);
-		nodo->operaciones=(nodo->aproxcalc) ? mOpApx : mOpExc;
-		nodo->operacion=*nodo->operaciones;
-		nodo->i=0;
-		nodo->j=1;
-	}
-	else if ( nodoant!=NULL && !nodoant->aproxcalc && nodo->aproxcalc)
+    nodo->aproxcalc=esaprox(nodo);
+    nodo->operaciones=(nodo->aproxcalc) ? mOpApx : mOpExc;
+    
+    if ( nodoant!=NULL && !nodoant->aproxcalc && nodo->aproxcalc)
 		return FinNodo;
-		
-	return SolNoEncontrada;
+        
+    return resolver_nodo_firsti(nodos,nodo,nodoant);
+}
+
+/*
+ * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
+ */
+EResolverNodoEstados FASTCALL resolver_nodo_firsti(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
+{
+    nodo->operacion=*nodo->operaciones;
+    if ((nodo->operacion=*(++nodo->operaciones))==None)
+        return FinNodo;   
+            
+    nodo->i=-1;
+    
+    return resolver_nodo_nexti(nodos,nodo,nodoant);
+}
+
+/*
+ * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
+ */
+EResolverNodoEstados FASTCALL resolver_nodo_nexti(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
+{
+    int j,nummaxmult;
+    
+    do
+    {
+        if (++(nodo->i)>=nodo->count)
+        {
+            nodo->operaciones++;
+            return resolver_nodo_firsti(nodos,nodo,nodoant);            
+        }
+            
+        j=nodo->i+1;
+        if (j>=nodo->count)
+        {
+            nodo->operaciones++;
+            return resolver_nodo_firsti(nodos,nodo,nodoant);
+        }
+        switch (nodo->operacion)
+        {
+            case Multiplicacion:                
+                for(nummaxmult=mObjetivo/nodo->numeros[nodo->i];j<nodo->count && nodo->numeros[j]>nummaxmult;j++);                
+                break;
+            case Resta:
+                for(;j<nodo->count && nodo->numeros[j]==nodo->numeros[nodo->i];j++);                
+                break;
+        }
+        
+    } while (j>=nodo->count);
+    nodo->j=j;
+    nodo->resolver_nodo=resolver_nodo_ij;
+    
+    return resolver_nodo_ij(nodos,nodo,nodoant);
+}
+
+/*
+ * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
+ */
+EResolverNodoEstados FASTCALL resolver_nodo_nextij(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
+{
+    nodo->resolver_nodo= (++(nodo->j)>=nodo->count) ? resolver_nodo_nexti : resolver_nodo_ij;
+        
+    return nodo->resolver_nodo(nodos,nodo,nodoant);
+}
+
+/*
+ * Devuelve 1 si encontrada solucion o fin, 0 si no, -1 si hay error
+ */
+EResolverNodoEstados FASTCALL resolver_nodo_ij(Nodos *nodos,Nodo *nodo,Nodo *nodoant)
+{
+    int num1=nodo->numeros[nodo->i];
+    int num2=nodo->numeros[nodo->j];
+    int r;
+    
+    switch (nodo->operacion)
+    {
+        case Multiplicacion:
+            r=num1*num2;
+            break;
+        case Division:
+            r=((num1 % num2)==0) ? num1/num2 : -1;
+            break;
+        case Resta:
+            r=num1-num2;
+            break;
+        case Suma:
+            r=num1+num2;
+            break;
+    }
+    nodo->resolver_nodo=resolver_nodo_nextij;
+    if (r>0)
+    {
+        nodo->calculo=r;
+        copyopnodonuevo(nodos);
+        nodo->resolver_nodo=resolver_nodo_init;
+    }
+    
+    return nodo->resolver_nodo(nodos,nodo,nodoant);
 }
 
 /*
@@ -718,7 +832,7 @@ EResolverNodoEstados FASTCALL resolver_nodo(Nodos *nodos,Nodo *nodo,Nodo *nodoan
 int FASTCALL resolver_nodoact()
 {
 	Nodo *nodoact=obtnodoactptr(&mNodos);
-	EResolverNodoEstados r=resolver_nodo(&mNodos,nodoact,(!mNodos.count) ? NULL : &mNodos.nodos[mNodos.count-1]);
+	EResolverNodoEstados r=nodoact->resolver_nodo(&mNodos,nodoact,(!mNodos.count) ? NULL : &mNodos.nodos[mNodos.count-1]);
 	
 	switch (r)
 	{
