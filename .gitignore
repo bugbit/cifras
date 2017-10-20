@@ -36,3 +36,10 @@ Debug/
 # Debug files
 *.dSYM/
 *.su
+
+# visual studio c++
+
+*.suo
+*.*sdf
+*.user
+ipch/

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cifrasi", "cifrasi\cifrasi.vcxproj", "{B376085E-01C9-482D-A6B3-86B0182F46DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cifrasr", "cifrasr\cifrasrecursivo.vcxproj", "{177EAF0A-6E50-4746-9524-E6406B63E84F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B376085E-01C9-482D-A6B3-86B0182F46DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B376085E-01C9-482D-A6B3-86B0182F46DB}.Debug|Win32.Build.0 = Debug|Win32
+		{B376085E-01C9-482D-A6B3-86B0182F46DB}.Release|Win32.ActiveCfg = Release|Win32
+		{B376085E-01C9-482D-A6B3-86B0182F46DB}.Release|Win32.Build.0 = Release|Win32
+		{177EAF0A-6E50-4746-9524-E6406B63E84F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{177EAF0A-6E50-4746-9524-E6406B63E84F}.Debug|Win32.Build.0 = Debug|Win32
+		{177EAF0A-6E50-4746-9524-E6406B63E84F}.Release|Win32.ActiveCfg = Release|Win32
+		{177EAF0A-6E50-4746-9524-E6406B63E84F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
