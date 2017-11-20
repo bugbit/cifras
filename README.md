@@ -49,7 +49,25 @@ http://eliatron.blogspot.com.es/2011/02/asombroso-juego-de-numeros.html
 
 25, 50, 75, 100, 3, 6 => 952
 
-Vamos a intentar dar una explicación a esto. Un primer acercamiento al número pudo ser 75/25=3; 3*3=9; 100+6=106; 106*9=954. Ahora, sólo haría falta conseguir un 2 para restar, pero éste sólo se podría obtener haciendo 50/25 y el 25 ya lo habíamos utilizado. Por eso, hace falta usar el Factor Común. La fórmula original resultaría 954=(100+6)*3*75:25. Por lo tanto, para poder introducir el 50:25, es fácil ver sónde hay que hacerlo: 952=(100+6)*3*75:25-50:25=[(100+6)*3*75-50]:25 y YA ESTÁ. Al final, no era tan complicado llegar al resultado.
+Vamos a intentar dar una explicación a esto. Un primer acercamiento al número pudo ser 75/25=3; 3*3=9; 100+6=106; 106*9=954. 
+Ahora, sólo haría falta conseguir un 2 para restar, pero éste sólo se podría obtener haciendo 50/25 y el 25 ya lo habíamos utilizado. 
+Por eso, hace falta usar el Factor Común. 
+La fórmula original resultaría 954=(100+6)*3*75:25. Por lo tanto, para poder introducir el 50:25, es fácil ver dónde hay que hacerlo: 
+	952=(100+6)*3*75:25-50:25=[(100+6)*3*75-50]:25 y YA ESTÁ. Al final, no era tan complicado llegar al resultado.
+
+1=> 75/25=3
+2=> #1(3)*3=9
+3=> 100+6=106
+4=> #2(9)*#3(106)=954
+
+952-954=-2 => 50/25=2
+
+1= 3*75=225
+2=> del
+3=> 100+6=106
+4=> #1(115)*#3(106)=
+
+
 
 http://gaussianos.com/los-reyes-de-la-prueba-de-numeros-de-cifras-y-letras/
 
