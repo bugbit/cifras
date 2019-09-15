@@ -1,0 +1,87 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+/*
+	CIFRAS [tipo de generador de los numeros] [grupo1] [grupo2] [grupo3] [grupo4]
+		Tipo de generador de numeros:
+			1: random tv2
+			2: random canal sur
+			3: random 1-100
+
+	CIFRAS [num1] [num2] [num3] [num4] [num5] [num6] [objetivo]
+
+*/
+
+
+enum ERandom { Ninguno=-1, TV2=0, CanalSur,R100 };
+
+
+enum ERandom mRandom;
+int tv1grupos[4];
+int mNumeros[6];
+int mObjetivo;
+
+void instrucciones()
+{
+	printf
+	(
+		"Instrucciones:\n"
+		"Tipo random o tecleo los 6 n£meros m s objetivo\n"
+		"r1\trandom tv2. Puede elegir los 4 grupos\n"
+		"r2\trandom canal sur\n"
+		"r3\tRandom 1-100\n"
+		"exit\tsalir\n"
+
+	);
+}
+
+void generar_random_tv(int num,char **grupos)
+{
+}
+
+void generar_random_canalsur()
+{
+}
+
+void generar_random_1_100()
+{
+}
+
+
+int read(int num,char **argv)
+{
+	char *arg1=*argv;
+
+	if (!strcmpi(arg1,"r1"))
+	{
+		if (num==1)
+			generar_random_tv(0,NULL);
+		else if (num==5)
+			generar_random_tv(num-1,argv+1);
+		else
+		{
+			prinf("si elijes grupos tienen que ser 4\n");
+			return -1;
+		}
+
+		return 0;
+	}
+	else if (!strcmpi(arg1,"r2"))
+	{
+		generar_random_canalsur();
+
+		return 0;
+	}
+
+}
+
+
+int _cdecl main(int argc,char **argv)
+{
+/*
+	if (readargs(argc,argv))
+		return EXIT_FAILURE;
+      */
+
+	return EXIT_SUCCESS;
+}
