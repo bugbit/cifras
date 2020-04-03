@@ -4,8 +4,35 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-body {
-    text-align: center
+input {
+    width: 40px;
+    margin-right: 10px;
+    text-align: right
+}
+
+/* "auto" makes the left and right margins center the wrapper */
+.divMain {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.divGrupos {
+    margin: 10px;
+}
+
+.divGrupo {
+    display: table-row;
+    width: auto;
+    margin: 4px;
+}
+
+.divGrupoBlock {
+    float: left; /*fix for  buggy browsers*/
+    display: table-column;
+    width: 50px;
+    height:10px;
+    background-color: rgba(0,0,0,0.4);
+    margin:4px;
 }
 
 a, .btn-link {

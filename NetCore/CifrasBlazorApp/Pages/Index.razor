@@ -1,18 +1,75 @@
 ﻿@page "/"
 
-<h1>Cifras (programa "Cifras y letras" de la tele)</h1>
+<div class="divMain">
+    <h1>Cifras (programa "Cifras y letras" de la tele)</h1>
 
-<p>Encuentra la solución exacta o aproximación</p>
+    <p>Encuentra la solución exacta o aproximación</p>
 
-<fieldset>
-    <legend>Elige un Modo</legend>
-    <label>
-        <input type="radio" name="color" value="azul"> La 2
-    </label>
-    <label>
-        <input type="radio" name="color" value="negro"> Canal Sur
-    </label>
-    <label>
-        <input type="radio" name="color" value="amarillo"> 1-100
-    </label>
-</fieldset>
+    <fieldset>
+        <legend>Jugadores</legend>
+        <label>
+            <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU) @oninput="jugadores_input"> CPU
+        </label>
+        <label>
+            <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU_CPU) @oninput="jugadores_input"> CPU contra CPU
+        </label>
+        <label>
+            <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU_Human) @oninput="jugadores_input"> CPU contra humano
+        </label>
+    </fieldset>
+    <br />
+    <div class="divGrupos" style=@((IsElegirGrupo) ? "" : "display:none")>
+        @foreach (var g in Grupos)
+        {
+            <div class="divGrupo">
+                @for (var j = 0; j < g; j++)
+                {
+                    <div class="divGrupoBlock"></div>
+                }
+            </div>
+        }
+        <br />
+    </div>
+    Número a buscar:
+    <input id="num" maxlength="3" />
+    <br />
+    <br />
+    Pistas:
+    <input id="0" maxlength="3" />
+    <input id="1" maxlength="3" />
+    <input id="2" maxlength="3" />
+    <input id="3" maxlength="3" />
+    <input id="4" maxlength="3" />
+    <input id="5" maxlength="3" />
+    <br />
+    <br />
+    <button @onclick="GeneraLa2_Click">Genera La2</button>
+    <button onclick="randomCanalSur()">Genera CanalSur</button>
+    <button onclick="random100()">Genera 1-100</button>
+    <button onclick="resuelve()">Resuelve</button>
+    <button onclick="jugar()" disabled=@(Jugadores == Cifras.Core.EJugadores.CPU)>Jugar</button>
+    <br />
+    <br />
+    Solución:
+    <br /><pre id="sol" style="border:solid 1px blue;width:150px;height:135px;padding:10px;text-align:right;margin:0 auto"></pre>
+    <br />
+    <div id="tiempo" style="font-size:12px"></div>
+</div>
+
+@code
+{
+    private Cifras.Core.EJugadores Jugadores = Cifras.Core.EJugadores.None;
+    private Cifras.Core.Generador.IGeneradorEnunciado Generador = null;
+    private bool IsElegirGrupo = false;
+    private int[] Grupos = new[] { 6, 6, 6, 6 };
+
+    private void jugadores_input(ChangeEventArgs e)
+    {
+        Jugadores = Enum.Parse<Cifras.Core.EJugadores>(Convert.ToString(e.Value));
+    }
+
+    private void GeneraLa2_Click()
+    {
+        IsElegirGrupo = Jugadores != Cifras.Core.EJugadores.CPU;
+    }
+}
