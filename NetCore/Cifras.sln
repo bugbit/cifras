@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CifrasBlazorApp", "CifrasBlazorApp\CifrasBlazorApp.csproj", "{5A543596-5022-414F-AE02-9A67FDE2682F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cifras.Core", "Cifras.Core\Cifras.Core.csproj", "{076EACB9-9122-457C-85EF-00D63591F94D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cifras.Core", "Cifras.Core\Cifras.Core.csproj", "{076EACB9-9122-457C-85EF-00D63591F94D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cifra.Console", "Cifra.Console\Cifra.Console.csproj", "{76EFC7EE-1B47-47C1-9981-043A1F154165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cifra.Console", "Cifra.Console\Cifra.Console.csproj", "{76EFC7EE-1B47-47C1-9981-043A1F154165}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cifras.Text", "Cifras.Text\Cifras.Text.csproj", "{E73B3154-9880-4242-96F1-794512D68ECA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cifras.Test", "Cifras.Text\Cifras.Test.csproj", "{E73B3154-9880-4242-96F1-794512D68ECA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

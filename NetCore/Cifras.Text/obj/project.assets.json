@@ -33,9 +33,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Proyectos\\oscar\\cifras\\NetCore\\Cifras.Text\\Cifras.Text.csproj",
-      "projectName": "Cifras.Text",
-      "projectPath": "C:\\Proyectos\\oscar\\cifras\\NetCore\\Cifras.Text\\Cifras.Text.csproj",
+      "projectUniqueName": "C:\\Proyectos\\oscar\\cifras\\NetCore\\Cifras.Text\\Cifras.Test.csproj",
+      "projectName": "Cifras.Test",
+      "projectPath": "C:\\Proyectos\\oscar\\cifras\\NetCore\\Cifras.Text\\Cifras.Test.csproj",
       "packagesPath": "C:\\Users\\familia\\.nuget\\packages\\",
       "outputPath": "C:\\Proyectos\\oscar\\cifras\\NetCore\\Cifras.Text\\obj\\",
       "projectStyle": "PackageReference",

@@ -8,7 +8,7 @@
     <fieldset>
         <legend>Jugadores</legend>
         <label>
-            <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU) @oninput="jugadores_input"> CPU
+            <input type="radio" name="jugadores" checked value=@(Cifras.Core.EJugadores.CPU) @oninput="jugadores_input"> CPU
         </label>
         <label>
             <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU_CPU) @oninput="jugadores_input"> CPU contra CPU
@@ -18,7 +18,7 @@
         </label>
     </fieldset>
     <br />
-    <div class="divGrupos" style=@((IsElegirGrupo) ? "" : "display:none")>
+    <div class="divGrupos" style=@((GeneradorGrupo == null) ? "" : "display:none" )>
         @foreach (var g in Grupos)
         {
             <div class="divGrupo">
@@ -35,12 +35,12 @@
     <br />
     <br />
     Pistas:
-    <input id="0" maxlength="3" />
-    <input id="1" maxlength="3" />
-    <input id="2" maxlength="3" />
-    <input id="3" maxlength="3" />
-    <input id="4" maxlength="3" />
-    <input id="5" maxlength="3" />
+    <input id="0" maxlength="3" value=@GetPista(0) />
+    <input id="1" maxlength="3" value=@GetPista(1) />
+    <input id="2" maxlength="3" value=@GetPista(2) />
+    <input id="3" maxlength="3" value=@GetPista(3) />
+    <input id="4" maxlength="3" value=@GetPista(4) />
+    <input id="5" maxlength="3" value=@GetPista(5) />
     <br />
     <br />
     <button @onclick="GeneraLa2_Click">Genera La2</button>
@@ -58,18 +58,29 @@
 
 @code
 {
-    private Cifras.Core.EJugadores Jugadores = Cifras.Core.EJugadores.None;
-    private Cifras.Core.Generador.IGeneradorEnunciado Generador = null;
-    private bool IsElegirGrupo = false;
+    private Cifras.Core.EJugadores Jugadores = Cifras.Core.EJugadores.CPU;
+    private Cifras.Core.Generador.IGeneradorEnunciadoElegirGrupo GeneradorGrupo = null;
     private int[] Grupos = new[] { 6, 6, 6, 6 };
+    private Cifras.Core.Enunciado mEnunciado = null;
+
+    private string GetPista(int argIdxPista)
+    {
+        if (mEnunciado == null || mEnunciado.Pistas == null || argIdxPista < 0 || argIdxPista > mEnunciado.Pistas.Length)
+            return string.Empty;
+
+        return mEnunciado.Pistas[argIdxPista].ToString();
+    }
 
     private void jugadores_input(ChangeEventArgs e)
     {
-        Jugadores = Enum.Parse<Cifras.Core.EJugadores>(Convert.ToString(e.Value));
+        Jugadores = Enum.Parse<Cifras.Core.EJugadores>
+    (Convert.ToString(e.Value));
     }
 
     private void GeneraLa2_Click()
     {
-        IsElegirGrupo = Jugadores != Cifras.Core.EJugadores.CPU;
+        var pGenerado = new Cifras.Core.Generador.GeneradorEnunciadoTVE();
+
+        mEnunciado = pGenerado.Generar();
     }
 }

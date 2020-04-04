@@ -10,7 +10,7 @@ namespace Cifras.Core.Generador
         int GrupoInicial { get; }
         int GrupoFinal { get; }
         int[] LongGrupos { get; }
-        int GrupoAct { get; }
+        int IdxPistaAct { get; }
         void SetGrupo(int argGrupo);
         void SetGrupoCPU();
     }
