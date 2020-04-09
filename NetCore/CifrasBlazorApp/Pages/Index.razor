@@ -6,32 +6,20 @@
     <p>Encuentra la solución exacta o aproximación</p>
 
     <fieldset>
-        <legend>Jugadores</legend>
+        <legend>Tipo Enunciado</legend>
         <label>
-            <input type="radio" name="jugadores" checked value=@(Cifras.Core.EJugadores.CPU) @oninput="jugadores_input"> CPU
+            <input type="radio" name="tenum" checked value=@(Cifras.Core.ETipoEnunciado.La2) @oninput="tenum_input"> La2
         </label>
         <label>
-            <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU_CPU) @oninput="jugadores_input"> CPU contra CPU
+            <input type="radio" name="tenum" value=@(Cifras.Core.ETipoEnunciado.CanalSur) @oninput="tenum_input"> Canal Sur
         </label>
         <label>
-            <input type="radio" name="jugadores" value=@(Cifras.Core.EJugadores.CPU_Human) @oninput="jugadores_input"> CPU contra humano
+            <input type="radio" name="tenum" value=@(Cifras.Core.ETipoEnunciado.Random1_100) @oninput="tenum_input"> Random 1-100
         </label>
     </fieldset>
     <br />
-    <div class="divGrupos" style=@((GeneradorGrupo == null) ? "" : "display:none" )>
-        @foreach (var g in Grupos)
-        {
-            <div class="divGrupo">
-                @for (var j = 0; j < g; j++)
-                {
-                    <div class="divGrupoBlock"></div>
-                }
-            </div>
-        }
-        <br />
-    </div>
     Número a buscar:
-    <input id="num" maxlength="3" />
+    <input id="num" value=@(mEnunciado?.Objetivo) maxlength="3" />
     <br />
     <br />
     Pistas:
@@ -43,12 +31,47 @@
     <input id="5" maxlength="3" value=@GetPista(5) />
     <br />
     <br />
-    <button @onclick="GeneraLa2_Click">Genera La2</button>
-    <button onclick="randomCanalSur()">Genera CanalSur</button>
-    <button onclick="random100()">Genera 1-100</button>
+    <button @onclick="Genera_Click">Genera</button>
     <button onclick="resuelve()">Resuelve</button>
-    <button onclick="jugar()" disabled=@(Jugadores == Cifras.Core.EJugadores.CPU)>Jugar</button>
+    <button onclick="jugar()">Jugar</button>
     <br />
+    @if (TipoEnunciado == Cifras.Core.ETipoEnunciado.La2 && GeneradorGrupo != null)
+    {
+        <div class="Grupos">
+            <div class="GrupoRow">
+                @for (int c = 1, cols = Grupos.Length; c <= cols; c++)
+                {
+                    <div class="GrupoCell">
+                        <p>@c</p>
+                    </div>
+                }
+            </div>
+            @for (int rows = Grupos.Max(), cols = Grupos.Length, r = 0; r < rows; r++)
+            {
+                <div class="GrupoRow">
+                    @for (var c = 0; c < cols; c++)
+                    {
+                        <div class="GrupoCell">
+                            @if (r + 1 <= Grupos[c])
+                            {
+                                <div class="BlockGrupo"></div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            <div class="GrupoRow">
+                @for (int c = 1, cols = Grupos.Length; c <= cols; c++)
+                {
+                    <div class="GrupoCell">
+                        <button @onclick=@(e=>elegirgrupo_click(c))>Elegir</button>
+                    </div>
+                }
+            </div>
+            <br />
+        </div>
+        <p style="color:green">@MensajeElegirCPU</p>
+    }
     <br />
     Solución:
     <br /><pre id="sol" style="border:solid 1px blue;width:150px;height:135px;padding:10px;text-align:right;margin:0 auto"></pre>
@@ -58,9 +81,10 @@
 
 @code
 {
-    private Cifras.Core.EJugadores Jugadores = Cifras.Core.EJugadores.CPU;
+    private Cifras.Core.ETipoEnunciado TipoEnunciado = Cifras.Core.ETipoEnunciado.La2;
     private Cifras.Core.Generador.IGeneradorEnunciadoElegirGrupo GeneradorGrupo = null;
-    private int[] Grupos = new[] { 6, 6, 6, 6 };
+    private int[] Grupos;
+    private string MensajeElegirCPU = string.Empty;
     private Cifras.Core.Enunciado mEnunciado = null;
 
     private string GetPista(int argIdxPista)
@@ -71,16 +95,31 @@
         return mEnunciado.Pistas[argIdxPista].ToString();
     }
 
-    private void jugadores_input(ChangeEventArgs e)
+    private void tenum_input(ChangeEventArgs e)
     {
-        Jugadores = Enum.Parse<Cifras.Core.EJugadores>
-    (Convert.ToString(e.Value));
+        TipoEnunciado = Enum.Parse<Cifras.Core.ETipoEnunciado>
+(Convert.ToString(e.Value));
     }
 
-    private void GeneraLa2_Click()
+    private void elegirgrupo_click(int argGrupo)
     {
-        var pGenerado = new Cifras.Core.Generador.GeneradorEnunciadoTVE();
+        GeneradorGrupo.SetGrupo(argGrupo);
 
-        mEnunciado = pGenerado.Generar();
+        var pGrupoCPU = GeneradorGrupo.SetGrupoCPU();
+
+        MensajeElegirCPU = $"La CPU ha elegido el grupo {pGrupoCPU}";
+        Grupos = GeneradorGrupo.LongGrupos;
+
+        if (GeneradorGrupo.SeHaAcabadoDeEligir)
+        {
+            mEnunciado = GeneradorGrupo.Generar();
+            GeneradorGrupo = null;
+        }
+    }
+
+    private void Genera_Click()
+    {
+        GeneradorGrupo = new Cifras.Core.Generador.GeneradorEnunciadoTVE();
+        Grupos = GeneradorGrupo.LongGrupos;
     }
 }

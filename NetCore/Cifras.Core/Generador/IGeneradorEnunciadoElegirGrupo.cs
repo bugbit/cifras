@@ -11,7 +11,8 @@ namespace Cifras.Core.Generador
         int GrupoFinal { get; }
         int[] LongGrupos { get; }
         int IdxPistaAct { get; }
+        bool SeHaAcabadoDeEligir { get; }
         void SetGrupo(int argGrupo);
-        void SetGrupoCPU();
+        int SetGrupoCPU();
     }
 }

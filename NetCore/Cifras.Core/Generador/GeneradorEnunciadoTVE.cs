@@ -35,6 +35,8 @@ namespace Cifras.Core.Generador
 
         public int IdxPistaAct { get; private set; } = 0;
 
+        public bool SeHaAcabadoDeEligir { get; private set; } = false;
+
         public Enunciado Generar()
         {
             while (IdxPistaAct < mEnunciado.Pistas.Length)
@@ -45,18 +47,24 @@ namespace Cifras.Core.Generador
 
         public void SetGrupo(int argGrupo)
         {
-            if (IdxPistaAct >= mEnunciado.Pistas.Length || argGrupo > mGrupos.Length)
+            if (SeHaAcabadoDeEligir || argGrupo > mGrupos.Length)
                 return;
 
             var pIdxGrupo = argGrupo - 1;
             var pIdx = IdxPistaAct++;
 
             mEnunciado.Pistas[pIdx] = mGrupos[pIdxGrupo][--LongGrupos[pIdxGrupo]];
+
+            SeHaAcabadoDeEligir = IdxPistaAct >= mEnunciado.Pistas.Length;
         }
 
-        public void SetGrupoCPU()
+        public int SetGrupoCPU()
         {
-            SetGrupo(mRandom.Next(mGrupos.Length) + 1);
+            var pIdxGrupo = mRandom.Next(mGrupos.Length) + 1;
+
+            SetGrupo(pIdxGrupo);
+
+            return pIdxGrupo;
         }
 
         private void GenerarGrupos()

@@ -16,23 +16,28 @@ input {
     margin: 0 auto;
 }
 
-.divGrupos {
-    margin: 10px;
-}
-
-.divGrupo {
+.GrupoRow {
     display: table-row;
-    width: auto;
-    margin: 4px;
+    height: 30px;
 }
 
-.divGrupoBlock {
-    float: left; /*fix for  buggy browsers*/
-    display: table-column;
-    width: 50px;
-    height:10px;
+.GrupoCell {
+    display: table-cell;
+    width: 90px;
+    height: 30px;
+}
+
+.BlockGrupo {
+    width: 80px;
+    height: 20px;
     background-color: rgba(0,0,0,0.4);
-    margin:4px;
+}
+
+.BtnElegirCell {
+    display: table-cell;
+    width: 90px;
+    height: 30px;
+    margin: 4px;
 }
 
 a, .btn-link {
