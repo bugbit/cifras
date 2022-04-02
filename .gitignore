@@ -1,5 +1,7 @@
 *.bak
 
+build/
+
 # Object files
 *.o
 *.ko

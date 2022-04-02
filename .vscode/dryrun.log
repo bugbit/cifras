@@ -1,0 +1,15 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/oscar/proyectos/oscar/retro/cifras'
+echo "----------Building project:[ cifras - Debug ]----------"
+"make" -f  "cifras.mk"
+make[1]: Entering directory '/home/oscar/proyectos/oscar/retro/cifras'
+test -d ./Debug || mkdir -p ./Debug
+/usr/bin/gcc -g -O0 -Wall  -I. -I.  -MG -MP -MT./Debug/CIFRAS.C.o -MF./Debug/CIFRAS.C.o.d -MM "CIFRAS.C"
+/usr/bin/gcc -c  "/datos/proyectos/oscar/cifras/CIFRAS.C" -g -O0 -Wall  -o ./Debug/CIFRAS.C.o -I. -I. 
+mkdir -p Debug
+echo "" > ./Debug/.d
+echo ./Debug/CIFRAS.C.o   > "cifras.txt"
+/usr/bin/g++ -o ./Debug/cifras @"cifras.txt" -L.   
+make[1]: Leaving directory '/home/oscar/proyectos/oscar/retro/cifras'
+make: Leaving directory '/home/oscar/proyectos/oscar/retro/cifras'
+ 
