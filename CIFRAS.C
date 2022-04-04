@@ -26,32 +26,45 @@
 #define randomint(n) (rand() % n)
 #endif
 
-#define MaxNodos    6
-#define MaxCaminos  12
+#define MaxNodos 6
+#define MaxCaminos 12
 
 enum EOperaciones
 {
-    Suma = -1,
-    Multiplicacion = -2,
-    Resta = -3,
-    Division = -4,
+    Suma = 1,
+    Multiplicacion = 2,
+    Resta = 3,
+    Division = 4,
     None = 0
 };
 
 typedef struct
 {
+    int numero;
 #if defined(SMALL) || defined(TINY) || defined(COMPACT) || defined(LARGE)
-    unsigned char numNumeros;
+    unsigned char n;
 #else
-    unsigned numNumeros;
+    unsigned n;
 #endif
-    int numeros[6];
+    int camino[MaxCaminos];
+} Numero;
+
+typedef struct
+{
+#if defined(SMALL) || defined(TINY) || defined(COMPACT) || defined(LARGE)
+    unsigned char n;
+#else
+    unsigned n;
+#endif
+    Numero numeros[6];
     enum EOperaciones operacion;
     int i, j;
 } Nodo;
 
-static int nodos_tail = -1;
+static Nodo *nodos_tail;
+static int nodos_n;
 static Nodo nodos[MaxNodos];
+static Numero solucion = {0, 0};
 static int numeros[6];
 static int objetivo;
 static int grupos123[][6] =
@@ -238,46 +251,165 @@ static void leerEnunciado(char **e)
     objetivo = atoi(*e);
 }
 
-static FASTCALL int new_idxnodo()
+static void reset_nodos()
 {
-    assert(nodos_tail < MaxNodos);
-
-    return ++nodos_tail;
+    nodos_tail = nodos;
+    nodos_n = 0;
 }
 
-static FASTCALL int del_idxnodo()
+static FASTCALL Nodo *new_nodo()
 {
-    assert(nodos_tail > 0);
+    assert(nodos_n <= MaxNodos);
+    nodos_n++;
+
+    return nodos_tail++;
+}
+
+static FASTCALL Nodo *del_nodo()
+{
+    assert(nodos_n > 0);
 
     return --nodos_tail;
 }
 
-static FASTCALL int new_firstnodo()
+static FASTCALL int search_numero(Nodo *n, unsigned numero)
 {
-    int idx = new_idxnodo();
-    Nodo *n = &nodos[idx];
+    int i = 0;
+    Numero *ptr = n->numeros;
 
-    memcpy(n->numeros, numeros, sizeof(numeros));
-    n->numNumeros = 6;
+    for (; i < n->n; i++, ptr++)
+        if (ptr->numero >= numero)
+            return i;
+
+    return n->n;
+}
+
+static Numero *insert_numero(Nodo *n, unsigned numero)
+{
+    int i = search_numero(n, numero);
+    Numero *ptr = &n->numeros[i];
+    int diff = n->n - i;
+
+    if (diff > 0)
+        memmove(ptr + 1, ptr, diff * sizeof(*ptr));
+    ptr->numero = numero;
+    ptr->n = 0;
+    n->n++;
+
+    return ptr;
+}
+
+static FASTCALL void new_firstnodo()
+{
+    Nodo *n = new_nodo();
+    int i = 6;
+    int *ptr = numeros;
+    Numero *n1;
+
+    n->n = 0;
+    for (; i-- > 0; ptr++)
+    {
+        n1 = insert_numero(n, *ptr);
+        *(n1->camino) = *ptr;
+        n1->n = 1;
+    }
+
     n->operacion = Suma;
     n->i = 0;
     n->j = 1;
+}
 
-    return idx;
+static FASTCALL int calc_op(EOperaciones op, unsigned n1, unsigned n2)
+{
+    switch (op)
+    {
+    case Suma:
+        return n1 + n2;
+    case Resta:
+        return n1 - n2;
+    case Multiplicacion:
+        return (n1 > 999 || n2 > 999) ? -1 : n1 * n2;
+    case Division:
+        return ((n1 % n2) == 0) ? n1 / n2 : -1;
+    default:
+        return -1;
+    }
+}
+
+static FASTCALL int calc_nodo_act()
+{
+    Nodo *n = nodos_tail, *n3;
+    Numero *n1 = &n->numeros[n->i], *n2 = &n->numeros[n->j], *n4;
+    int r = calc_op(n->operacion, n1->numero, n2->numero), num;
+
+    if (r < 0)
+        return -1;
+
+    n3 = new_nodo();
+    if (n->i > 0)
+    {
+        memcpy(n3->numeros, n->numeros, n->i * sizeof(*n1));
+        n3->n = n->i;
+    }
+    num = (n->j - n->i);
+    if (num > 0)
+    {
+        memcpy(n3->numeros + n3->n, n2 + 1, num * sizeof(*n2));
+        n3->n += num;
+    }
+    num = n->n - n->j - 1;
+    if (num > 0)
+    {
+        memcpy(n3->numeros + n3->n, &n->numeros[n->j + 1], num * sizeof(*n2));
+        n3->n += num;
+    }
+    n4 = insert_numero(n3, r);
+    n4->n = n1->n;
+    memcpy(n4->camino, n1->camino, n1->n * sizeof(int));
+    n4->camino[n4->n++] = -(int)n->operacion;
+    memcpy(n4->camino + n4->n, n2->camino, n2->n * sizeof(int));
+    n4->n += n2->n;
+
+    if (r == objetivo)
+    {
+        solucion = *n4;
+        
+        return 0;
+    }
+
+    // Numero *n3=
+
+    // if (r==objetivo)
+
+    return 1;
+}
+
+static FASTCALL int resolver_nodo_3_6()
+{
+    Nodo *n = nodos_tail;
+    int r = calc_op(n->operacion, n->numeros[n->i].numero, n->numeros[n->j].numero);
+
+    return 0;
 }
 
 static FASTCALL int resolver_nodo()
 {
-    return 0;
+    return resolver_nodo_3_6();
 }
 
 static void resolver()
 {
-    int idx = new_firstnodo();
+    time_t t1, t2;
+    int idx;
+
+    memset(nodos, 0, sizeof(nodos));
+    time(&t1);
+    new_firstnodo();
 
     while (nodos_tail >= 0)
     {
         if (!resolver_nodo())
             return;
     }
+    time(&t2);
 }
