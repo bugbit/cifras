@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Apr  5 21:55:33 2022
+# Make data base, printed on Wed Apr  6 21:59:22 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ SNAP_DATA = /var/snap/code/92
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:86222
+JOURNAL_STREAM = 8:82715
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -73,9 +73,9 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 7600
+MANAGERPID = 7654
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ed6c1c8b-0de6-485a-9d38-fc3a1d47d2b0.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2170ffbd-26b6-477f-888a-f1bef7cef181.sock
 # environment
 VSCODE_CWD = /home/oscar
 # environment
@@ -87,7 +87,7 @@ PATH = /home/oscar/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/niebla:@/tmp/.ICE-unix/7809,unix/niebla:/tmp/.ICE-unix/7809
+SESSION_MANAGER = local/niebla:@/tmp/.ICE-unix/7863,unix/niebla:/tmp/.ICE-unix/7863
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -105,7 +105,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = fb9441185fec45b8b6911a60bc7df17f
+INVOCATION_ID = 3cb0dd02233a466a9c7e7d5f73da4459
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/92/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -115,7 +115,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 9435
+GIO_LAUNCHED_DESKTOP_FILE_PID = 15630
 # automatic
 %F = $(notdir $%)
 # environment
@@ -129,7 +129,7 @@ PWD = /home/oscar/proyectos/oscar/retro/cifras
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 7774
+SSH_AGENT_PID = 7827
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = Unity
 # environment
@@ -247,7 +247,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 9620
+VSCODE_PID = 15866
 # variable set hash-table stats:
 # Load=118/1024=12%, Rehash=0, Collisions=16/143=11%
 
@@ -281,10 +281,10 @@ all:
 
 # Not a target:
 Makefile:
- 
 #  Implicit rule search has been done.
 #  Last modified 2022-04-02 18:54:59.520493458
 #  File has been updated.
+ 
 #  Successfully updated.
 
 # Not a target:
@@ -325,6 +325,6 @@ All:
 # strcache performance: lookups = 47 / hit rate = 19%
 # hash-table stats:
 # Load=38/8192=0%, Rehash=0, Collisions=4/47=9%
-# Finished Make data base on Tue Apr  5 21:55:33 2022
+# Finished Make data base on Wed Apr  6 21:59:22 2022
 
  

@@ -26,7 +26,7 @@
 #define randomint(n) (rand() % n)
 #endif
 
-#define MaxNodos 6
+#define MaxNodos 120
 #define MaxCaminos 12
 
 #define OpToCamino(op) (0xFFFF - (unsigned)op - 1)
@@ -63,7 +63,6 @@ typedef struct
     unsigned n;
 #endif
     Numero numeros[6];
-    enum EOperaciones operacion;
     const enum EOperaciones *operacionPtr, *opPtr;
     int i, j;
 } Nodo;
@@ -264,13 +263,14 @@ static void leerEnunciado(char **e)
 
 static void reset_nodos()
 {
+    memset(nodos, 0, sizeof(nodos));
     nodos_tail = NULL;
     nodos_n = 0;
 }
 
 static FASTCALL Nodo *new_nodo()
 {
-    assert(nodos_n <= MaxNodos);
+    assert(nodos_n <= MaxNodos - 1);
     nodos_n++;
 
     return (nodos_tail) ? ++nodos_tail : (nodos_tail = nodos);
@@ -279,6 +279,8 @@ static FASTCALL Nodo *new_nodo()
 static FASTCALL Nodo *del_nodo()
 {
     assert(nodos_n > 0);
+    nodos_n--;
+    memset(nodos_tail, 0, sizeof(*nodos_tail));
 
     return --nodos_tail;
 }
@@ -304,7 +306,8 @@ static Numero *insert_numero(Nodo *n, unsigned numero)
     if (diff > 0)
         memmove(ptr + 1, ptr, diff * sizeof(*ptr));
     ptr->numero = numero;
-    ptr->n = 0;
+    ptr->n = 1;
+    *(ptr->camino) = numero;
     n->n++;
 
     return ptr;
@@ -348,11 +351,11 @@ static FASTCALL TNumero calc_op(EOperaciones op, unsigned n1, unsigned n2)
     case Suma:
         return n1 + n2;
     case Resta:
-        return (n1 < n2) ? n1 - n2 : 0xFFFF;
+        return (n1 >= n2) ? n1 - n2 : 0xFFFF;
     case Multiplicacion:
         r = n1 * n2;
 
-        return r > n1 || r > n2 ? r : 0xFFFF;
+        return r >= n1 || r > n2 ? r : 0xFFFF;
     case Division:
         return ((n1 % n2) == 0) ? n1 / n2 : 0xFFFF;
     default:
@@ -374,11 +377,16 @@ static FASTCALL int esaprox(TNumero n)
 
 static FASTCALL int add_nums_camino(EOperaciones op, Numero *n1, Numero *n2, Numero *nr)
 {
-    nr->n = n1->n;
-    memcpy(nr->camino, n1->camino, n1->n * sizeof(TNumero));
-    memcpy(nr->camino + nr->n, n2->camino, n2->n * sizeof(TNumero));
-    nr->n += n2->n;
-    nr->camino[nr->n++] = OpToCamino(op);
+    TNumero *c = nr->camino;
+    int l1 = n1->n, l2 = n2->n, n = l1 + l2 + 1;
+
+    assert(n <= MaxCaminos && l1 > 0 && l2 > 0);
+    nr->n = n;
+    memcpy(c, n1->camino, l1 * sizeof(TNumero));
+    c += l1;
+    memcpy(c, n2->camino, l2 * sizeof(TNumero));
+    c += l2;
+    *c = OpToCamino(op);
 
     if (nr->numero == objetivo)
     {
@@ -409,20 +417,38 @@ static FASTCALL void addcounter_nodo(Nodo *n)
     }
 }
 
-static FASTCALL int calc_nodo_act()
+static FASTCALL int calc_nodo_act_2n()
+{
+    Nodo *n = nodos_tail, *n3 = new_nodo();
+    Numero *n1 = n->numeros, *n2 = n->numeros + 1, *n4 = n3->numeros;
+    const enum EOperaciones *op = n->opPtr, *opFin = n->operacionPtr + 4;
+    TNumero r;
+
+    n3->n = 1;
+    for (; op < opFin; op++)
+    {
+        r = calc_op(*op, n1->numero, n2->numero);
+
+        if (r == 0xFFFF)
+            continue;
+
+        if (!add_nums_camino(*op, n1, n2, n4))
+            return 0;
+    }
+
+    del_nodo();
+    del_nodo();
+
+    return 1;
+}
+
+static FASTCALL int calc_nodo_act_mas_2n()
 {
     Nodo *n = nodos_tail, *n3;
-    Numero *n1, *n2, *n4;
+    Numero *n1, *n2, *n4, *n5;
     int num, i, j;
     TNumero r;
     enum EOperaciones op;
-
-    if (!n->opPtr)
-    {
-        del_nodo();
-
-        return -1;
-    }
 
     i = n->i;
     j = n->j;
@@ -438,21 +464,26 @@ static FASTCALL int calc_nodo_act()
         return -1;
 
     n3 = new_nodo();
-    if (i > 0)
+    n5 = n3->numeros + n3->n;
+    num = i;
+    if (num > 0)
     {
-        memcpy(n3->numeros, n->numeros, i * sizeof(*n1));
-        n3->n = i;
+        memcpy(n5, n->numeros, num * sizeof(*n1));
+        n5 += num;
+        n3->n += num;
     }
     num = (j - i - 1);
     if (num > 0)
     {
-        memcpy(n3->numeros + n3->n, n2 + 1, num * sizeof(*n2));
+        memcpy(n5, n1 + 1, num * sizeof(*n2));
+        n5 += num;
         n3->n += num;
     }
     num = n->n - j - 1;
     if (num > 0)
     {
-        memcpy(n3->numeros + n3->n, &n->numeros[j + 1], num * sizeof(*n2));
+        memcpy(n5, &n->numeros[j + 1], num * sizeof(*n2));
+        n5 += num;
         n3->n += num;
     }
     n4 = insert_numero(n3, r);
@@ -466,10 +497,22 @@ static FASTCALL int calc_nodo_act()
 
 static FASTCALL int resolver_nodo()
 {
-    if (nodos_tail->n == 1)
+    if (!nodos_tail->opPtr)
+    {
+        del_nodo();
+
         return -1;
-        
-    return calc_nodo_act();
+    }
+
+    switch (nodos_tail->n)
+    {
+    case 1:
+        return -1;
+    case 2:
+        return calc_nodo_act_2n();
+    default:
+        return calc_nodo_act_mas_2n();
+    }
 }
 
 static void resolver()
