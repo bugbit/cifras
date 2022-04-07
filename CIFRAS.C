@@ -351,7 +351,7 @@ static FASTCALL TNumero calc_op(EOperaciones op, unsigned n1, unsigned n2)
     case Suma:
         return n1 + n2;
     case Resta:
-        return (n1 >= n2) ? n1 - n2 : 0xFFFF;
+        return (n1 > n2) ? n1 - n2 : 0xFFFF;
     case Multiplicacion:
         r = n1 * n2;
 
@@ -405,7 +405,7 @@ static FASTCALL void addcounter_nodo(Nodo *n)
 {
     if (++(n->j) >= n->n)
     {
-        if (++(n->i) > n->n - 1)
+        if (++(n->i) > n->n - 2)
         {
             n->i = 0;
             n->j = 1;
@@ -413,7 +413,10 @@ static FASTCALL void addcounter_nodo(Nodo *n)
                 n->opPtr = NULL;
         }
         else
+        {
             n->j = n->i + 1;
+            assert(n->j < n->n);
+        }
     }
 }
 
@@ -488,6 +491,8 @@ static FASTCALL int calc_nodo_act_mas_2n()
     }
     n4 = insert_numero(n3, r);
     initcounters_nodo(n3);
+
+    assert(n2->n > 0);
 
     if (!add_nums_camino(op, n1, n2, n4))
         return 0;

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Apr  6 21:59:22 2022
+# Make data base, printed on Thu Apr  7 19:46:26 2022
 
 # Variables
 
@@ -47,11 +47,11 @@ CURDIR := /home/oscar/proyectos/oscar/retro/cifras
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/92
+SNAP_DATA = /var/snap/code/93
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:82715
+JOURNAL_STREAM = 8:56291
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -73,13 +73,13 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 7654
+MANAGERPID = 3070
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2170ffbd-26b6-477f-888a-f1bef7cef181.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-e90f59f9-e6e9-40b6-9e46-806958a0f4a5.sock
 # environment
 VSCODE_CWD = /home/oscar
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/92/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/93/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -87,15 +87,15 @@ PATH = /home/oscar/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/niebla:@/tmp/.ICE-unix/7863,unix/niebla:/tmp/.ICE-unix/7863
+SESSION_MANAGER = local/niebla:@/tmp/.ICE-unix/3297,unix/niebla:/tmp/.ICE-unix/3297
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/oscar/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/92
+SNAP = /snap/code/93
 # environment
-SNAP_VERSION = e18005f0
+SNAP_VERSION = 8dfae7a5
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -105,9 +105,9 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 3cb0dd02233a466a9c7e7d5f73da4459
+INVOCATION_ID = 6face60bb8534edaa2d1028b39438bef
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/92/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/93/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -115,11 +115,11 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 15630
+GIO_LAUNCHED_DESKTOP_FILE_PID = 6795
 # automatic
 %F = $(notdir $%)
 # environment
-DISPLAY = :2
+DISPLAY = :1
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -129,7 +129,7 @@ PWD = /home/oscar/proyectos/oscar/retro/cifras
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 7827
+SSH_AGENT_PID = 3257
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = Unity
 # environment
@@ -141,7 +141,7 @@ HOME = /home/oscar
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/oscar/.config/Code/CachedData/e18005f0f1b33c29e81d732535d8c0e47cafb0b5
+VSCODE_CODE_CACHE_PATH = /home/oscar/.config/Code/CachedData/8dfae7a5cd50421d10cd99cb873990460525a898
 # environment
 LOGNAME = oscar
 # environment
@@ -171,7 +171,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/oscar/snap/code/92
+SNAP_USER_DATA = /home/oscar/snap/code/93
 # environment
 SHLVL = 0
 # environment
@@ -183,7 +183,7 @@ MAKE_VERSION := 4.2.1
 # environment
 USER = oscar
 # environment
-SNAP_REVISION = 92
+SNAP_REVISION = 93
 # makefile
 .DEFAULT_GOAL := All
 # environment
@@ -199,7 +199,7 @@ MAKE_COMMAND := make
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-b6f35f9c-1.66.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-b6f35f9c-1.66.1-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -237,7 +237,7 @@ SNAP_REEXEC =
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
-WINDOWPATH = 3
+WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -247,7 +247,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 15866
+VSCODE_PID = 6978
 # variable set hash-table stats:
 # Load=118/1024=12%, Rehash=0, Collisions=16/143=11%
 
@@ -325,6 +325,6 @@ All:
 # strcache performance: lookups = 47 / hit rate = 19%
 # hash-table stats:
 # Load=38/8192=0%, Rehash=0, Collisions=4/47=9%
-# Finished Make data base on Wed Apr  6 21:59:22 2022
+# Finished Make data base on Thu Apr  7 19:46:26 2022
 
  
