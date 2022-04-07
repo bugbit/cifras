@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Apr  7 19:46:26 2022
+# Make data base, printed on Thu Apr  7 21:55:33 2022
 
 # Variables
 
@@ -75,7 +75,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 MANAGERPID = 3070
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-e90f59f9-e6e9-40b6-9e46-806958a0f4a5.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fba5b482-95b7-4963-9a79-8abeb3e82d9b.sock
 # environment
 VSCODE_CWD = /home/oscar
 # environment
@@ -247,7 +247,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 6978
+VSCODE_PID = 10836
 # variable set hash-table stats:
 # Load=118/1024=12%, Rehash=0, Collisions=16/143=11%
 
@@ -281,10 +281,10 @@ all:
 
 # Not a target:
 Makefile:
+ 
 #  Implicit rule search has been done.
 #  Last modified 2022-04-02 18:54:59.520493458
 #  File has been updated.
- 
 #  Successfully updated.
 
 # Not a target:
@@ -325,6 +325,6 @@ All:
 # strcache performance: lookups = 47 / hit rate = 19%
 # hash-table stats:
 # Load=38/8192=0%, Rehash=0, Collisions=4/47=9%
-# Finished Make data base on Thu Apr  7 19:46:26 2022
+# Finished Make data base on Thu Apr  7 21:55:33 2022
 
  

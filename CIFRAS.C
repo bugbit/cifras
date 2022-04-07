@@ -26,11 +26,11 @@
 #define randomint(n) (rand() % n)
 #endif
 
-#define MaxNodos 120
+#define MaxNodos 6
 #define MaxCaminos 12
 
-#define OpToCamino(op) (0xFFFF - (unsigned)op - 1)
-#define CaminoToOp(c) ((EOperacions)(c - 0xFFFF + 1))
+#define OpToCamino(op) (0xFFFF - ((unsigned)op - 1))
+#define CaminoToOp(c) ((EOperaciones)(0xFFFF - c + 1))
 
 enum EOperaciones
 {
@@ -73,6 +73,7 @@ static Nodo nodos[MaxNodos];
 static Numero solucion = {0, 0};
 static int numeros[6];
 static int objetivo;
+static TNumero stacknums[MaxCaminos];
 static int const grupos123[][6] =
     {
         {1, 2, 3, 4, 5, 6},
@@ -85,6 +86,7 @@ static const EOperaciones operaciones2[] = {
     Suma, Resta, Division, Multiplicacion};
 
 static void resolver();
+static void printsols();
 
 #ifndef __EMSCRIPTEN__
 static void help();
@@ -530,10 +532,62 @@ static void resolver()
     reset_nodos();
     new_firstnodo();
 
-    while (nodos_tail >= 0)
+    while (nodos_n > 0)
     {
         if (!resolver_nodo())
             break;
     }
     time(&t2);
+    if (solucion.numero == objetivo)
+        printf("He encontrado la solución en %g segs\n", difftime(t2, t1));
+    else
+        printf("No He encontrado la solución sino una aproximación: %i en %g segs\n", solucion.numero, difftime(t2, t1));
+    printf("\nLa solución es:\n\n");
+    printsols();
+}
+
+static void printsols()
+{
+    TNumero *stack = stacknums - 1;
+    TNumero *c = solucion.camino, n1, n2, nr;
+    int n = solucion.n;
+    char op;
+    TNumero opMax = OpToCamino(EOperaciones::OpMax);
+
+    for (; n-- > 0; c++)
+    {
+        if (*c < opMax)
+            *++stack = *c;
+        else
+        {
+            n2 = *stack--;
+            n1 = *stack--;
+            switch (CaminoToOp(*c))
+            {
+            case EOperaciones::Suma:
+                nr = n1 + n2;
+                op = '+';
+                break;
+            case EOperaciones::Resta:
+
+                nr = n1 - n2;
+                op = '-';
+                break;
+            case EOperaciones::Multiplicacion:
+
+                nr = n1 * n2;
+                op = '*';
+                break;
+            case EOperaciones::Division:
+
+                nr = n1 / n2;
+                op = '/';
+                break;
+            default:
+                break;
+            }
+            *++stack = nr;
+            printf("%d %c %d = %d\n", n1, op, n2, nr);
+        }
+    }
 }

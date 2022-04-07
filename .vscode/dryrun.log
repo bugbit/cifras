@@ -2,7 +2,6 @@ make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/oscar/proyectos/oscar/retro/cifras'
 echo "----------Building project:[ cifras - Debug ]----------"
 "make" -f  "cifras.mk"
- 
 make[1]: Entering directory '/home/oscar/proyectos/oscar/retro/cifras'
 test -d ./Debug || mkdir -p ./Debug
 /usr/bin/gcc -g -O0 -Wall  -I. -I.  -MG -MP -MT./Debug/CIFRAS.C.o -MF./Debug/CIFRAS.C.o.d -MM "CIFRAS.C"
