@@ -1,3 +1,6 @@
+<h1>Cifras (programa \"Cifras y letras\" de la tele)</h1><br>
+<a href='https://bugbit.github.io/cifras/'>Cifras live (versión WASM, compile emscripten)</a>
+
 	CIFRAS [tipo de generador de los numeros]
 		Tipo de generador de numeros:
 			1: random tv2
