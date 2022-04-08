@@ -74,8 +74,8 @@ static Nodo *nodos_tail;
 static int nodos_n;
 static Nodo nodos[MaxNodos];
 static Numero solucion = {0, 0};
-static int numeros[6];
-static int objetivo;
+static TNumero numeros[6];
+static TNumero objetivo;
 static TNumero stacknums[MaxCaminos];
 static int const grupos123[][6] =
     {
@@ -90,10 +90,10 @@ static const enum EOperaciones operaciones2[] = {
 
 static void resolver();
 static void printsols();
+static void generarEnunciado(const char *tipo);
 
 #ifndef __EMSCRIPTEN__
 static void help();
-static void generarEnunciado(const char *tipo);
 static void leerEnunciado(char **e);
 int main(int argc, char **argv)
 {
@@ -123,13 +123,30 @@ int main(int argc, char **argv)
     return EXIT_SUCCESS;
 }
 #else
-extern "C"
+static void leerJSEnunciado()
 {
-    void prueba()
-    {
-        EM_ASM(
-            alert('hello world!'););
-    }
+    int i = 0;
+
+    for (; i < 6; i++)
+        numeros[i] = EM_ASM_INT({ return parseInt(document.getElementById($0).value); }, i);
+    objetivo = EM_ASM_INT(return parseInt(document.getElementById("num").value));
+}
+
+extern "C" void resuelve()
+{
+    leerJSEnunciado();
+    EM_ASM({ document.getElementById('output').value =''; });
+    resolver();
+}
+extern "C" void generaEnunciado(const char *tipo)
+{
+    int i = 0;
+
+    randomize();
+    generarEnunciado(tipo);
+    for (; i < 6; i++)
+        EM_ASM({document.getElementById($0).value = $1}, i, numeros[i]);
+    EM_ASM({document.getElementById("num").value = $0}, objetivo);
 }
 
 #endif
@@ -231,12 +248,16 @@ static void generar_random_tv()
     {
         grupo = randomgrupo(n123, i + 1);
         numeros[i] = obtnumero((int *)&result, grupo);
+#ifndef __EMSCRIPTEN__
         printf("%d ", numeros[i]);
+#endif
         if (grupo < 4)
             n123++;
     }
     objetivo = 100 + randomint(900);
+#ifndef __EMSCRIPTEN__
     printf("%d\n", objetivo);
+#endif
 }
 
 void generar_random_1_100()
@@ -246,10 +267,14 @@ void generar_random_1_100()
     for (i = 0; i < 6; i++)
     {
         numeros[i] = randomint(100) + 1;
+#ifndef __EMSCRIPTEN__
         printf("%d ", numeros[i]);
+#endif
     }
     objetivo = 100 + randomint(900);
+#ifndef __EMSCRIPTEN__
     printf("%d\n", objetivo);
+#endif
 }
 
 static void generarEnunciado(const char *tipo)
@@ -265,6 +290,8 @@ static void generarEnunciado(const char *tipo)
     }
 }
 
+#ifndef __EMSCRIPTEN__
+
 static void leerEnunciado(char **e)
 {
     int i;
@@ -273,6 +300,8 @@ static void leerEnunciado(char **e)
         numeros[i] = atoi(*e++);
     objetivo = atoi(*e);
 }
+
+#endif
 
 static void reset_nodos()
 {
@@ -345,7 +374,7 @@ static FASTCALL void new_firstnodo()
 {
     Nodo *n = new_nodo();
     int i = 6;
-    int *ptr = numeros;
+    TNumero *ptr = numeros;
     Numero *n1;
 
     n->n = 0;

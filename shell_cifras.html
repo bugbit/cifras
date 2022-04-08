@@ -31,12 +31,12 @@
         </div>
         <div>
             <button onclick="resuelve()">Resuelve</button>
-            <button onclick="randomTV()">Genera La2</button>
-            <button onclick="random100()">Genera 1-100</button>
+            <button onclick="generaEnunciado('tv')">Genera La2</button>
+            <button onclick="generaEnunciado('random')">Genera 1-100</button>
         </div>
         <div>
             <div> Solución:</div>
-            <div><textarea id="output" rows="8"></textarea></div>
+            <div><textarea id="output" rows="14"></textarea></div>
         </div>
     </div>
 
@@ -63,7 +63,11 @@
             })()
         }
         function resuelve() {
-            Module.cwrap("prueba");
+            Module.ccall("resuelve");
+        }
+
+        function generaEnunciado(tipo) {
+            Module.ccall("generaEnunciado", null, ['string'], [tipo]);
         }
     </script>
     {{{ SCRIPT }}}

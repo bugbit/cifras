@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Apr  8 17:49:16 2022
+# Make data base, printed on Fri Apr  8 23:53:21 2022
 
 # Variables
 
@@ -75,7 +75,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 MANAGERPID = 1961
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-da626952-95b3-408d-8380-cc47364cd9ec.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2d9cef51-d8f0-4eb5-88e1-2dead73dfd57.sock
 # environment
 VSCODE_CWD = /home/oscar
 # environment
@@ -247,7 +247,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 5733
+VSCODE_PID = 28086
 # variable set hash-table stats:
 # Load=118/1024=12%, Rehash=0, Collisions=16/143=11%
 
@@ -257,9 +257,9 @@ VSCODE_PID = 5733
 
 # Directories
 
-# . (device 2054, inode 14813791): 30 files, no impossibilities.
+# . (device 2054, inode 14813791): 31 files, no impossibilities.
 
-# 30 files, no impossibilities in 1 directories.
+# 31 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -281,12 +281,12 @@ all:
 
 # Not a target:
 Makefile:
- 
 #  Implicit rule search has been done.
 #  Last modified 2022-04-02 18:54:59.520493458
 #  File has been updated.
 #  Successfully updated.
 
+ 
 # Not a target:
 .DEFAULT:
 #  Implicit rule search has not been done.
@@ -319,12 +319,12 @@ All:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 38 / storage = 374 B / avg = 9 B
-# current buf: size = 8162 B / used = 374 B / count = 38 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 39 / storage = 390 B / avg = 10 B
+# current buf: size = 8162 B / used = 390 B / count = 39 / avg = 10 B
 
-# strcache performance: lookups = 47 / hit rate = 19%
+# strcache performance: lookups = 48 / hit rate = 18%
 # hash-table stats:
-# Load=38/8192=0%, Rehash=0, Collisions=4/47=9%
-# Finished Make data base on Fri Apr  8 17:49:16 2022
+# Load=39/8192=0%, Rehash=0, Collisions=4/48=8%
+# Finished Make data base on Fri Apr  8 23:53:21 2022
 
  

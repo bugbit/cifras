@@ -9,7 +9,7 @@ endif()
 add_executable(cifras CIFRAS.C)
     
 if (EMSCRIPTEN)
-set_target_properties(cifras PROPERTIES LINK_FLAGS "--shell-file ../shell_cifras.html")
+set_target_properties(cifras PROPERTIES LINK_FLAGS "-s EXPORTED_FUNCTIONS=_resuelve,_generaEnunciado -s EXPORTED_RUNTIME_METHODS=ccall --shell-file ../shell_cifras.html")
     # set_target_properties(
     #     ssolar
     #     PROPERTIES
