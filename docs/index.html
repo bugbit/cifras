@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Cifras/letras</title>
+    <style>
+        * {
+            font: 20px Courier
+        }
+
+        input {
+            width: 40px;
+            margin-right: 10px;
+            text-align: right
+        }
+    </style>
+</head>
+
+<body style="text-align:center">
+    <div>
+        <h1>Cifras (programa \"Cifras y letras\" de la tele)</h1>
+        <p>Hecho por Oscar Hernandez Bañó 2016-2022</p>
+    </div>
+    <div>
+        <p>Encuentra la solución exacta o aproximación</p>
+        <div>
+            Número a buscar: <input id="num" maxlength="3" /><br /><br />
+            Pistas: <input id="0" maxlength="3" /><input id="1" maxlength="3" /><input id="2" maxlength="3" /><input
+                id="3" maxlength="3" /><input id="4" maxlength="3" /><input id="5" maxlength="3" />
+        </div>
+        <div>
+            <button onclick="resuelve()">Resuelve</button>
+            <button onclick="generaEnunciado('tv')">Genera La2</button>
+            <button onclick="generaEnunciado('random')">Genera 1-100</button>
+        </div>
+        <div>
+            <div> Solución:</div>
+            <div><textarea id="output" rows="14"></textarea></div>
+        </div>
+    </div>
+
+    <script type='text/javascript'>
+        var Module = {
+            preRun: [],
+            postRun: [],
+            print: (function () {
+                var element = document.getElementById('output');
+                if (element) element.value = ''; // clear browser cache
+                return function (text) {
+                    if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+                    // These replacements are necessary if you render to raw HTML
+                    //text = text.replace(/&/g, "&amp;");
+                    //text = text.replace(/</g, "&lt;");
+                    //text = text.replace(/>/g, "&gt;");
+                    //text = text.replace('\n', '<br>', 'g');
+                    console.log(text);
+                    if (element) {
+                        element.value += text + "\n";
+                        element.scrollTop = element.scrollHeight; // focus on bottom
+                    }
+                };
+            })()
+        }
+        function resuelve() {
+            Module.ccall("resuelve");
+        }
+
+        function generaEnunciado(tipo) {
+            Module.ccall("generaEnunciado", null, ['string'], [tipo]);
+        }
+    </script>
+    <script async type="text/javascript" src="cifras.js"></script>
+</body>
+
+</html>
+
