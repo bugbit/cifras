@@ -1,4 +1,4 @@
-<h1>Cifras (programa \"Cifras y letras\" de la tele)</h1><br>
+# Cifras (programa \"Cifras y letras\" de la tele)
 <a href='https://bugbit.github.io/cifras/' target='_blank'>Cifras live (versión WASM, compile emscripten)</a>
 
 	CIFRAS [tipo de generador de los numeros]
