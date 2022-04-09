@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Apr  8 23:53:21 2022
+# Make data base, printed on Sat Apr  9 09:21:08 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ SNAP_DATA = /var/snap/code/93
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:49912
+JOURNAL_STREAM = 8:53352
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -63,7 +63,7 @@ MAKEFILE_LIST :=  Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/github-desktop.desktop
+GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.desktop
 # environment
 USERNAME = oscar
 # environment
@@ -73,9 +73,11 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1961
+_ = /snap/code/93/usr/share/code/code
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2d9cef51-d8f0-4eb5-88e1-2dead73dfd57.sock
+MANAGERPID = 2323
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 VSCODE_CWD = /home/oscar
 # environment
@@ -83,11 +85,11 @@ GSETTINGS_SCHEMA_DIR = /snap/code/93/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/oscar/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/oscar/.dotnet/tools
+PATH = /home/oscar/.local/bin:/home/oscar/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/oscar/.dotnet/tools:/home/oscar/.dotnet/tools
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/niebla:@/tmp/.ICE-unix/2181,unix/niebla:/tmp/.ICE-unix/2181
+SESSION_MANAGER = local/niebla:@/tmp/.ICE-unix/2554,unix/niebla:/tmp/.ICE-unix/2554
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -105,17 +107,19 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = c9e34b24374b4d2782e4e152876abe0c
+INVOCATION_ID = 3d2bdc94f3b045929f44e6e32673191a
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/93/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
+LS_COLORS = 
+# environment
 XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 5549
+GIO_LAUNCHED_DESKTOP_FILE_PID = 6767
 # automatic
 %F = $(notdir $%)
 # environment
@@ -129,15 +133,17 @@ PWD = /home/oscar/proyectos/oscar/retro/cifras
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2147
+SSH_AGENT_PID = 2517
 # environment
-ORIGINAL_XDG_CURRENT_DESKTOP = Unity
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /home/oscar
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
@@ -175,9 +181,9 @@ SNAP_USER_DATA = /home/oscar/snap/code/93
 # environment
 SHLVL = 0
 # environment
-LOCAL_GIT_DIRECTORY = /usr/lib/github-desktop/resources/app/git
-# environment
 GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ea58a980-ef5d-439f-9c13-5724201db44e.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -190,8 +196,6 @@ SNAP_REVISION = 93
 XDG_CURRENT_DESKTOP = Unity
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
-# environment
-DOTNET_CLI_UI_LANGUAGE = en
 # default
 MAKE_COMMAND := make
 # default
@@ -200,14 +204,14 @@ MAKE_COMMAND := make
 *F = $(notdir $*)
 # environment
 VSCODE_IPC_HOOK = /run/user/1000/vscode-b6f35f9c-1.66.1-main.sock
+# environment
+BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
 MAKEFLAGS = pqrR
 # environment
 MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# environment
-VSTEST_HOST_DEBUG = 0
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -247,9 +251,9 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 28086
+VSCODE_PID = 6819
 # variable set hash-table stats:
-# Load=118/1024=12%, Rehash=0, Collisions=16/143=11%
+# Load=120/1024=12%, Rehash=0, Collisions=18/145=12%
 
 # Pattern-specific Variable Values
 
@@ -257,9 +261,9 @@ VSCODE_PID = 28086
 
 # Directories
 
-# . (device 2054, inode 14813791): 31 files, no impossibilities.
+# . (device 2054, inode 14813791): 27 files, no impossibilities.
 
-# 31 files, no impossibilities in 1 directories.
+# 27 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -276,6 +280,7 @@ all:
 
 .PHONY: clean All
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -286,7 +291,6 @@ Makefile:
 #  File has been updated.
 #  Successfully updated.
 
- 
 # Not a target:
 .DEFAULT:
 #  Implicit rule search has not been done.
@@ -319,12 +323,12 @@ All:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 39 / storage = 390 B / avg = 10 B
-# current buf: size = 8162 B / used = 390 B / count = 39 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 35 / storage = 349 B / avg = 9 B
+# current buf: size = 8162 B / used = 349 B / count = 35 / avg = 9 B
 
-# strcache performance: lookups = 48 / hit rate = 18%
+# strcache performance: lookups = 44 / hit rate = 20%
 # hash-table stats:
-# Load=39/8192=0%, Rehash=0, Collisions=4/48=8%
-# Finished Make data base on Fri Apr  8 23:53:21 2022
+# Load=35/8192=0%, Rehash=0, Collisions=4/44=9%
+# Finished Make data base on Sat Apr  9 09:21:08 2022
 
  
