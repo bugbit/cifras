@@ -9,6 +9,13 @@
     	CIFRAS /?
     	o
     	CIFRAS [num1] [num2] [num3] [num4] [num5] [num6] [objetivo]
+	
+# screenshots
+
+dosbox cifras Compilado con BC3.1 model tiny call fastcall
+![dosbox cifras Compilado con BC3.1 model tiny call fastcall](/docs/screenshots/dosbox_cifras_exe_bc_3_1.png)
+dosbox cifrasx Compilado con djgpp
+![sdosbox cifrasx Compilado con djgpp](/docs/screenshots/dosbox_cifrasx_exe_djpgg.png)
 
 3*3
 
