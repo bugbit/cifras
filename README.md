@@ -1,5 +1,5 @@
 # Cifras (programa \"Cifras y letras\" de la tele)
-Cifras live (versión WASM, compile emscripten) (https://bugbit.github.io/cifras)
+[Cifras live (versión WASM, compile emscripten)](https://bugbit.github.io/cifras)
 
 	CIFRAS [tipo de generador de los numeros]
 		Tipo de generador de numeros:
